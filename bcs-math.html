@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCS Practice - Saadat Notebook</title>
+
+    <script>
+        (function () {
+            try {
+                const theme = localStorage.getItem('saadatNotesTheme');
+                const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (theme === 'dark' || (!theme && systemPrefersDark)) {
+                    document.documentElement.classList.add('dark-mode');
+                }
+                const ua = navigator.userAgent || "";
+                if (ua.includes("wv") || ua.includes("WrapperApp") || ua.includes("saadatnotebook")) {
+                    document.documentElement.classList.add("wrapper-app");
+                }
+            } catch (e) { }
+        })();
+    </script>
+
+    <!-- Main Stylesheets and Fonts -->
+    <link rel="stylesheet" href="css/bcs-math.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+
+<body>
+
+    <!-- ============================================= -->
+    <!-- ========= YOUR UNIVERSAL COMPONENTS ========= -->
+    <!-- ============================================= -->
+    <script>
+        <script>
+    (function() {
+        try {
+            // Check if user is logged in by looking for a session-related item (we use homepage for this check)
+            if (document.cookie.includes("PHPSESSID")) { // A better check for a server session
+                const bottomNavHTML = `
+                <nav class="bottom-nav">
+                    <a href="index.php" class="nav-link nav-home-link"><i class="fas fa-home"></i><span>Dashboard</span></a>
+                    <a href="profile.php" class="nav-link"><i class="fas fa-user-circle"></i><span>Profile</span></a>
+                    <a href="bcs-math.html" class="nav-link"><i class="fas fa-square-root-alt"></i><span>BCS Maths</span></a>
+                </nav>`;
+                document.write(bottomNavHTML);
+            }
+        } catch(e) { console.error("Bottom nav injection failed:", e); }
+    })();
+</script>
+    <header class="header">
+        <a href="index.php" class="logo-link">
+            <div class="logo-container">
+                <img src="images/logo.png" alt="Saadat Notebook Logo" class="site-logo">
+                <div class="logo-text">
+                    <h1>Saadat Notebook</h1>
+                    <p>Department of Mathematics</p>
+                </div>
+            </div>
+        </a>
+        <div class="header-actions">
+            <button class="search-icon-trigger" aria-label="Open Search"><i class="fas fa-search"></i></button>
+            <button class="menu-icon" aria-label="Open Menu"><i class="fas fa-bars"></i></button>
+        </div>
+    </header>
+    <div id="search-view">
+        <div class="search-view-header">
+            <button id="search-back-btn" aria-label="Go Back"><i class="fas fa-arrow-left"></i></button>
+            <div class="search-input-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-view-input" placeholder="Search by title or subject name...">
+            </div>
+        </div>
+        <div class="search-view-body">
+            <div class="search-placeholder">
+                <p>Start typing to search...</p>
+            </div>
+        </div>
+    </div>
+    <!-- End of Universal Components -->
+
+
+    <!-- ============================================= -->
+    <!-- ======== NEW BCS QUIZ PAGE CONTENT ======== -->
+    <!-- ============================================= -->
+    <div class="page-wrapper animate__animated animate__fadeIn">
+        <main>
+            <!-- View 1: Setup Screen (Initially Visible) -->
+            <div id="quiz-setup-view" class="quiz-view active">
+                <h1 class="page-title">BCS Math Practice</h1>
+                <div class="calculator-card">
+                    <div class="welcome-header">
+                        <h2>Setup Your Practice Round</h2>
+                    </div>
+                    <div class="quiz-setup-form">
+                        <label for="num-questions">Number of Questions:</label>
+                        <input type="number" id="num-questions" class="form-control" value="20" min="5" max="50">
+
+                        <label for="time-limit">Time Limit (Minutes):</label>
+                        <input type="number" id="time-limit" class="form-control" value="15" min="1">
+                    </div>
+                    <div class="calculator-actions">
+                        <button id="start-quiz-btn" class="btn-primary">Start Practice</button>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <p><i class="fas fa-sync-alt"></i> <strong>Fresh Questions:</strong> Your progress is saved, so you
+                        won't see repeated questions until you've answered the entire bank.</p>
+                    <p><i class="fas fa-check-double"></i> <strong>Answer Verification:</strong> All answers have been
+                        carefully reviewed. If an answer seems incorrect, we encourage you to treat it as a chance for
+                        deeper research and self-verification.</p>
+                </div>
+            </div>
+
+            <!-- View 2: Active Quiz Screen (Initially Hidden) -->
+            <div id="quiz-active-view" class="quiz-view">
+                <div class="quiz-status-bar">
+                    <div id="quiz-progress">Question: 1 / 20</div>
+                    <div id="quiz-timer">Time: 15:00</div>
+                </div>
+                <!-- NEW: Timer Progress Bar -->
+                <div class="timer-progress-bar-container">
+                    <div id="timer-progress-bar"></div>
+                </div>
+                <div class="quiz-question-card">
+                    <h2 id="question-text">Question text will be loaded here...</h2>
+                    <div id="options-container">
+                        <!-- Option buttons will be generated here by JavaScript -->
+                    </div>
+                    <div class="quiz-navigation">
+                        <button id="next-question-btn" class="btn-primary">Next Question</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View 3: Results Screen (Initially Hidden) -->
+            <div id="quiz-results-view" class="quiz-view">
+                <h1 class="page-title">Practice Round Complete!</h1>
+                <div class="results-card">
+                    <h2 class="sgpa-display">Your Score: <span id="final-score">18 / 20</span></h2>
+                    <div class="result-details">
+                        <p><strong>Correct:</strong> <span id="correct-answers">0</span> | <strong>Incorrect:</strong>
+                            <span id="incorrect-answers">0</span> | <strong>Unanswered:</strong> <span
+                                id="unanswered-questions">0</span>
+                        </p>
+                        <p><strong>Time Taken:</strong> <span id="time-taken">14:25</span></p>
+                    </div>
+                </div>
+
+                <div class="calculator-actions">
+                    <button id="review-answers-btn" class="btn-secondary">Review Answers</button>
+                    <button id="practice-again-btn" class="btn-primary">Practice Again</button>
+                </div>
+
+                <div id="review-section" class="hidden">
+                    <h2 class="section-title-department">Answer Review</h2>
+                    <div id="review-accordion-container" class="accordion-container">
+                        <!-- Review items will be generated here by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- NEW: Custom Modal for Resuming Quiz -->
+    <div class="confirm-modal-backdrop" id="resume-modal">
+        <div class="confirm-modal-content">
+            <i class="fas fa-history"></i>
+            <h3>Unfinished Quiz</h3>
+            <p>You have a practice round in progress. Would you like to resume?</p>
+            <div class="confirm-modal-actions">
+                <button id="resume-no-btn" class="modal-btn modal-btn-secondary">No, Start New</button>
+                <button id="resume-yes-btn" class="modal-btn modal-btn-primary">Yes, Resume</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/config.js"></script>
+    <!-- Universal Scripts -->
+    <script src="js/global.js"></script>
+
+    <!-- Page-Specific Script -->
+    <script src="js/bcs-math.js"></script>
+</body>
+
+</html>

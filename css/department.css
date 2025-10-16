@@ -1,0 +1,213 @@
+/* css/department.css (Final Version) */
+
+/* Subtitle style */
+.page-subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-top: -1rem;
+    margin-bottom: 2rem;
+}
+
+/* --- DYNAMIC CAROUSEL STYLES (for BOTH carousels) --- */
+.hero-swiper, .gallery-swiper {
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 50px;
+    --swiper-navigation-color: #fff;
+    --swiper-pagination-color: #fff;
+}
+
+.hero-swiper {
+    margin-bottom: 2.5rem;
+}
+
+.hero-swiper .swiper-slide, 
+.gallery-swiper .swiper-slide {
+    background-position: center;
+    background-size: cover;
+    width: 280px;
+    aspect-ratio: 4 / 3; /* Both are now square */
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+}
+
+.gallery-swiper .swiper-slide {
+     box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+     cursor: pointer;
+}
+
+.hero-swiper .swiper-slide img, 
+.gallery-swiper .swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Universal section title for this page */
+.section-title-department {
+    font-size: 1.3rem;
+    font-weight: 600;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Principal Card */
+.principal-card {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    padding: 2rem 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 2.5rem;
+    box-shadow: var(--shadow-sm);
+}
+.principal-card img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--background-color);
+    box-shadow: var(--shadow-md);
+    margin-bottom: 1rem;
+}
+.principal-details h4 {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+}
+.principal-details h5 {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+.principal-quote {
+    font-style: italic;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+}
+
+/* Polished List Faculty Styles */
+.faculty-list-v2 { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2.5rem; }
+.faculty-card-v3 {
+    display: flex; align-items: center; gap: 1rem; padding: 1rem; background-color: var(--card-background);
+    border: 1px solid var(--border-color); border-radius: 12px; box-shadow: var(--shadow-sm);
+    transition: transform 0.2s ease, box-shadow 0.2s ease; cursor: pointer;
+}
+.faculty-card-v3:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+.faculty-card-v3 img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.faculty-info-v3 { flex-grow: 1; }
+.faculty-info-v3 h3 { font-size: 1.1rem; font-weight: 600; margin: 0 0 0.2rem 0; }
+.faculty-info-v3 p { font-size: 0.9rem; color: var(--text-secondary); margin: 0; }
+.social-link-v2 { flex-shrink: 0; font-size: 1.6rem; color: #1877F2; text-decoration: none; padding: 0.5rem; transition: transform 0.2s ease; }
+.social-link-v2:hover { transform: scale(1.1); }
+
+/* Photo Gallery Container */
+.photo-gallery-container { margin-bottom: 2.5rem; }
+.see-all-btn-container { text-align: center; margin-top: -1rem; } /* Adjusted margin for better spacing */
+.see-all-btn-container .btn-primary {
+    display: inline-block;
+    text-decoration: none;
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-weight: 600;
+    background-color: var(--primary-color);
+    color: #fff;
+}
+html.dark-mode .see-all-btn-container .btn-primary {
+    color: #0a0a0a;
+}
+
+/* --- ACADEMIC CALENDAR CARD FIX --- */
+.academic-calendar-card {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden; /* Key fix: hide overflow */
+    padding: 0;       /* Key fix: remove padding */
+    margin-bottom: 2.5rem;
+}
+.academic-calendar-card img {
+    max-width: 100%;
+    display: block; /* Removes tiny space under image */
+}
+.calendar-footer {
+    padding: 1.5rem;
+    text-align: center;
+}
+.calendar-footer .btn-primary {
+    display: inline-block;
+    text-decoration: none;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    background-color: var(--primary-color);
+    color: #fff;
+}
+html.dark-mode .calendar-footer .btn-primary {
+    color: #0a0a0a;
+}
+
+/* Department Contacts Grid */
+.contact-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 2.5rem; }
+@media (min-width: 600px) { .contact-grid { grid-template-columns: 1fr 1fr; } }
+.contact-card { background: var(--primary-light); text-align: center; padding: 2rem; border-radius: 12px; }
+.contact-card i { font-size: 2.5rem; color: var(--primary-color); margin-bottom: 1rem; }
+.contact-card h3 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+.contact-card p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem; }
+.contact-link { text-decoration: none; color: var(--primary-color); font-weight: 500; }
+
+/* Creator's Note */
+.creator-note { margin-bottom: 2rem; }
+.creator-attribution {
+    display: flex; align-items: center; gap: 0.8rem; font-size: 1rem;
+    font-weight: 500; color: var(--text-secondary); margin-bottom: 1rem;
+    padding: 0.75rem; background-color: var(--primary-light); border-radius: 8px;
+}
+.creator-attribution i { color: var(--primary-color); }
+.welcome-text { color: var(--text-secondary); }
+
+/* --- ALL MODAL STYLES (Faculty, Lightbox) --- */
+.faculty-modal-backdrop, .lightbox-backdrop {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 2000; display: flex; align-items: center; justify-content: center;
+    padding: 1rem; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+}
+.faculty-modal-backdrop { background-color: rgba(0,0,0,0.6); }
+.lightbox-backdrop { background-color: rgba(0,0,0,0.85); flex-direction: column; }
+.faculty-modal-backdrop.is-visible, .lightbox-backdrop.is-visible {
+    opacity: 1; pointer-events: auto;
+}
+.faculty-modal-content {
+    background-color: var(--card-background); border-radius: 16px;
+    max-width: 400px; width: 100%; box-shadow: var(--shadow-lg);
+    transform: scale(0.95); transition: transform 0.3s ease;
+}
+.faculty-modal-backdrop.is-visible .faculty-modal-content { transform: scale(1); }
+.modal-header { text-align: right; padding: 0.5rem; }
+.modal-body { padding: 0 2rem 2rem 2rem; text-align: center; }
+.modal-body img { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 4px solid #fff; box-shadow: var(--shadow-md); margin-top: -80px; background-color: var(--card-background); }
+.modal-body h2 { font-size: 1.6rem; margin-top: 1rem; margin-bottom: 0.25rem; }
+.modal-body p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+.modal-contact-info { border-top: 1px solid var(--border-color); padding-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem; text-align: left; }
+.contact-info-item { display: flex; align-items: center; gap: 1rem; font-size: 0.95rem; text-decoration: none; color: var(--text-primary); }
+.contact-info-item i { width: 20px; text-align: center; color: var(--text-secondary); }
+.close-lightbox-btn { position: absolute; top: 3.5rem; right: 1rem; background: none; border: none; font-size: 1.8rem; color: #fff; cursor: pointer; opacity: 0.8; }
+.lightbox-image { max-width: 95%; max-height: 80%; border-radius: 8px; }
+.lightbox-description { color: #fff; margin-top: 1rem; font-weight: 500; text-align: center; }
+
+/* Styles for Full Gallery Page (gallery.php) */
+.gallery-grid-full {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+.gallery-item-full { background: var(--card-background); border-radius: 12px; overflow: hidden; box-shadow: var(--shadow-sm); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.gallery-item-full:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); }
+.gallery-image-full { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.gallery-description { padding: 1rem; font-weight: 500; }

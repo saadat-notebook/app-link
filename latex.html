@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaTeX Equation and Text Formatter</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f7f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            min-height: 70px;
+            margin-bottom: 20px;
+            resize: vertical;
+        }
+
+        .output-area {
+            position: relative;
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            min-height: 50px;
+            font-family: "Courier New", Courier, monospace;
+            white-space: pre-wrap; /* Preserves newlines */
+            word-wrap: break-word;
+        }
+
+        #copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 6px 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        #copy-btn:hover {
+            background-color: #2980b9;
+        }
+
+        #copy-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>LaTeX Equation and Text Formatter</h1>
+
+        <label for="equation-input">Equation</label>
+        <textarea id="equation-input" placeholder="e.g., 3^x+1 + 3^x-1 = 90"></textarea>
+
+        <label for="text-input">Accompanying Text</label>
+        <textarea id="text-input" placeholder="e.g., Find the value of X"></textarea>
+        
+        <div class="output-area">
+            <code id="latex-output">Your LaTeX code will appear here...</code>
+            <button id="copy-btn">Copy</button>
+        </div>
+    </div>
+    <script src="js/config.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const equationInput = document.getElementById('equation-input');
+            const textInput = document.getElementById('text-input');
+            const latexOutput = document.getElementById('latex-output');
+            const copyBtn = document.getElementById('copy-btn');
+
+            const convertToLatex = () => {
+                const eqText = equationInput.value.trim();
+                const accompanyingText = textInput.value.trim();
+                
+                if (!eqText && !accompanyingText) {
+                    latexOutput.textContent = 'Your LaTeX code will appear here...';
+                    return;
+                }
+
+                let processedEquation = '';
+                if (eqText) {
+                    processedEquation = eqText.replace(/\^([a-zA-Z0-9+\-()]+)/g, '^{$1}');
+                    processedEquation = processedEquation.replace(/\*/g, ' \\cdot ');
+                    processedEquation = `$$${processedEquation}$$`;
+                }
+
+                // --- CHANGE IS HERE ---
+                // We now join the two parts with a simple newline, without the '\\' command.
+                let finalOutput;
+                if (processedEquation && accompanyingText) {
+                    finalOutput = `${processedEquation}\n${accompanyingText}`;
+                } else {
+                    finalOutput = processedEquation || accompanyingText;
+                }
+                
+                latexOutput.textContent = finalOutput;
+            };
+
+            equationInput.addEventListener('input', convertToLatex);
+            textInput.addEventListener('input', convertToLatex);
+
+            copyBtn.addEventListener('click', () => {
+                navigator.clipboard.writeText(latexOutput.textContent).then(() => {
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = 'Copied!';
+                    setTimeout(() => { copyBtn.textContent = originalText; }, 1500);
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                });
+            });
+
+            convertToLatex();
+        });
+    </script>
+
+</body>
+</html>

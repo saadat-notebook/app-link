@@ -1,0 +1,27 @@
+/* --- Styles for the Graphing Calculator Page --- */
+
+#graph-container {
+    width: 100%;
+    
+    /*
+     *  ==============================================================
+     *  === THIS IS THE DEFINITIVE FIX & YOUR CUSTOMIZATION POINT ===
+     *  ==============================================================
+     *  100vh = 100% of the viewport height.
+     *  We subtract a fixed amount to account for the header, bottom nav,
+     *  and page title.
+     *
+     *  YOU CAN TWEAK THE '200px' VALUE TO FINE-TUNE THE HEIGHT.
+     *  A larger number (e.g., 220px) makes the calculator shorter.
+     *  A smaller number (e.g., 180px) makes it taller.
+    */
+    height: calc(80vh - 160px);
+    
+    /* A sensible minimum height for smaller screens or when the keyboard is up */
+    min-height: 400px;
+    
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+}

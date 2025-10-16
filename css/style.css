@@ -1,0 +1,2377 @@
+/* --- UNIVERSAL STYLESHEET (style.css) --- */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+--primary-color: #0a0a0a;
+--primary-light: #f5f5f5;
+--background-color: #ffffff;
+--card-background: #ffffff;
+--text-primary: #1c1c1e;
+--text-secondary: #6c757d;
+--border-color: #e9ecef;
+--shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+--shadow-md: 0 4px 6px rgba(0,0,0,0.08);
+--shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+--success-color: #28a745;
+--animation-duration: 0.8s;
+}
+
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+}
+
+body {
+font-family: 'Poppins', sans-serif;
+background-color: var(--background-color);
+color: var(--text-primary);
+line-height: 1.6;
+padding-left: 1rem;
+padding-right: 1rem;
+padding-bottom: 1rem;
+-webkit-font-smoothing: antialiased;
+overflow-x: hidden;
+}
+
+/* This is the wrapper for all main content. It sits below the fixed header */
+.page-wrapper {
+transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+}
+.page-wrapper.is-inactive {
+opacity: 0;
+pointer-events: none;
+transform: scale(0.98);
+}
+.animate__animated {
+--animate-duration: var(--animation-duration);
+}
+.delay-300ms {
+animation-delay: 300ms;
+}
+.delay-500ms {
+animation-delay: 500ms;
+}
+
+
+/* --- GLOBAL HEADER STYLES --- */
+/* --- GLOBAL HEADER STYLES --- */
+.header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 1rem;
+position: absolute; /* instead of fixed */
+top: 0;
+left: 0;
+width: 100%;
+background-color: rgba(255, 255, 255, 0.9);
+backdrop-filter: blur(10px);
+-webkit-backdrop-filter: blur(10px);
+z-index: 100;
+border-bottom: 1px solid var(--border-color);
+}
+
+a.logo-link {
+text-decoration: none;
+}
+.logo-container {
+display: flex;
+align-items: center;
+gap: 12px;
+}
+.logo-img {
+width: 42px;
+height: 42px;
+border-radius: 12px;
+background: var(--primary-color);
+display: flex;
+align-items: center;
+justify-content: center;
+color: white;
+font-weight: 700;
+font-size: 1.2rem;
+box-shadow: var(--shadow-sm);
+}
+.logo-text h1 {
+font-size: 1.1rem;
+margin: 0;
+font-weight: 700;
+color: var(--text-primary);
+}
+.logo-text p {
+font-size: 0.60rem;
+margin: 0;
+color: var(--text-secondary);
+font-weight: 400;
+}
+.header-actions {
+display: flex;
+align-items: center;
+gap: 15px;
+}
+.search-icon-trigger, .menu-icon {
+background: none;
+border: none;
+font-size: 1.4rem;
+color: var(--text-primary);
+cursor: pointer;
+padding: 0.5rem;
+transition: transform 0.2s, background-color 0.2s;
+border-radius: 50%;
+}
+.search-icon-trigger:hover, .menu-icon:hover {
+background-color: var(--primary-light);
+}
+
+/* Push the page content below the header */
+.page-wrapper {
+margin-top: 90px; /* adjust to match header height + margin-top */
+}
+
+
+/* --- INNER PAGE TITLE STYLES --- */
+.page-title {
+font-size: 1.3rem;
+font-weight: 700;
+margin-bottom: 1.5rem;
+color: var(--text-primary);
+}
+/* Style for the new subtitle on the Department page */
+.page-subtitle {
+font-size: 1rem;
+color: var(--text-secondary);
+margin-top: -1rem; /* Pull it closer to the title */
+margin-bottom: 2rem; /* Add space before the carousel */
+}
+/* --- ALL-PURPOSE CARD & LIST STYLES --- */
+/* (For homepage cards, accordions, lists, etc.) */
+.user-card, .main-resource-link, .grid-button, .upload-item, .accordion-item {
+border: 1px solid var(--border-color);
+}
+
+/* Replace the old user card styles with this new compact version */
+
+.user-card {
+background-color: var(--card-background);
+border-radius: 12px; /* Slightly tighter radius */
+padding: 1rem; /* Reduced padding */
+box-shadow: var(--shadow-md);
+margin-bottom: 1.5rem;
+border-left: 4px solid var(--primary-color);
+transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+.user-card:hover {
+transform: translateY(-5px);
+box-shadow: var(--shadow-lg);
+}
+.welcome-header h2 {
+margin: 0 0 1rem 0; /* Reduced bottom margin */
+font-size: 1.3rem; /* Reduced font size */
+font-weight: 600;
+}
+.user-info {
+display: flex;
+align-items: center;
+gap: 12px; /* Reduced gap */
+margin-bottom: 1rem; /* Reduced bottom margin */
+}
+.avatar-container {
+position: relative;
+}
+.avatar {
+width: 48px; /* Reduced avatar size */
+height: 48px; /* Reduced avatar size */
+border-radius: 50%;
+object-fit: cover;
+border: 2px solid var(--primary-light); /* Slightly thinner border */
+}
+.active-status {
+position: absolute;
+bottom: 0; right: 0;
+width: 12px; /* Smaller status dot */
+height: 12px; /* Smaller status dot */
+background-color: var(--success-color);
+border-radius: 50%;
+border: 2px solid var(--card-background);
+}
+.user-details {
+display: flex;
+flex-direction: column;
+}
+.user-name {
+font-weight: 600;
+font-size: 1rem; /* Reduced font size */
+margin-bottom: 2px;
+}
+.user-year {
+font-size: 0.8rem; /* Reduced font size */
+color: var(--text-secondary);
+font-weight: 400;
+}
+.user-meta {
+display: flex;
+gap: 1rem;
+border-top: 1px solid var(--border-color); /* Added a separator line */
+padding-top: 0.75rem; /* Space above the new line */
+margin-top: 0.75rem; /* Space below the user info */
+}
+.meta-item {
+display: flex;
+align-items: center;
+gap: 6px;
+font-size: 0.8rem; /* Reduced font size */
+color: var(--text-secondary);
+}
+.meta-item i {
+color: var(--primary-color);
+font-size: 0.8rem; /* Smaller icon */
+}
+
+.main-resource-link { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem;
+background-color: var(--card-background); border-radius: 12px; text-decoration: none; color: var(--text-primary);
+font-weight: 500; box-shadow: var(--shadow-sm); transition: all 0.3s ease-in-out; margin-bottom: 1.5rem; }
+.main-resource-link:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); background-color:
+var(--primary-light); color: var(--primary-color); }
+.main-resource-link i { color: var(--primary-color); font-size: 1.2rem; }
+.main-resource-link i:last-child { color: var(--text-secondary); }
+
+.section-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.section-title h3 { font-size: 1rem; font-weight: 600; }
+.see-all { font-size: 0.85rem; color: var(--primary-color); text-decoration: none; font-weight: 500; }
+.see-all:hover { text-decoration: underline; }
+
+.button-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 2rem; }
+.grid-button { display: flex; flex-direction: column; align-items: center; justify-content: center; background-color:
+var(--card-background); padding: 1.5rem 0.5rem; border-radius: 12px; text-decoration: none; color: var(--text-primary);
+font-weight: 500; box-shadow: var(--shadow-sm); transition: all 0.3s ease-in-out; text-align: center; }
+.grid-button:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); background-color: var(--primary-light);
+color: var(--primary-color); }
+.grid-button i { font-size: 1.5rem; margin-bottom: 0.8rem; color: var(--primary-color); }
+.grid-button span { font-size: 0.9rem; }
+
+
+/* --- ACCORDION, UPLOAD-LIST, & MODAL STYLES --- */
+.accordion-container { display: flex; flex-direction: column; gap: 0.5rem; }
+.accordion-item { background-color: var(--card-background); border-radius: 12px; overflow: hidden; }
+.accordion-header { width: 100%; background-color: transparent; border: none; display: flex; justify-content:
+space-between; align-items: center; padding: 1rem 1.25rem; cursor: pointer; text-align: left; font-family: 'Poppins',
+sans-serif; font-size: 1rem; font-weight: 500; color: var(--text-primary); }
+.accordion-header .fa-chevron-down { transition: transform 0.3s ease; }
+.accordion-item.active .accordion-header .fa-chevron-down { transform: rotate(180deg); }
+.accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+padding: 0 1.25rem; }
+
+.recent-uploads { margin-bottom: 2rem; }
+.upload-list { display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 2.5rem; }
+.upload-item { display: flex; align-items: center; background-color: var(--card-background); padding: 0.8rem 1rem;
+border-radius: 12px; box-shadow: var(--shadow-sm); transition: transform 0.3s ease-in-out; }
+.upload-item:hover { transform: translateX(5px); }
+.upload-icon { width: 40px; height: 40px; border-radius: 8px; background-color: var(--primary-light); display: flex;
+align-items: center; justify-content: center; margin-right: 1rem; color: var(--primary-color); font-size: 1.1rem; }
+.upload-details { flex: 1; }
+.upload-details h4 { font-size: 0.95rem; font-weight: 500; margin-bottom: 0; }
+.upload-details p { font-size: 0.75rem; color: var(--text-secondary); }
+.download-btn { background: none; border: none; color: var(--text-secondary); font-size: 1rem; cursor: pointer; padding:
+0.5rem; border-radius: 50%; transition: all 0.2s; }
+.download-btn:hover { background-color: var(--primary-light); color: var(--primary-color); }
+.upload-item .upload-details .preview-link { text-decoration: none; color: var(--text-primary); }
+.upload-item .upload-details .preview-link:hover { text-decoration: underline; }
+
+/* --- STYLES FOR GOOGLE DRIVE-STYLE PREVIEW MODAL (FULLSCREEN) --- */
+
+.modal-overlay {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: var(--card-background); /* Change to solid for a seamless feel */
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 2000;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.3s ease-in-out;
+}
+.modal-overlay.active {
+opacity: 1;
+pointer-events: auto;
+}
+
+#preview-modal .modal-content {
+display: flex;
+flex-direction: column;
+background-color: var(--card-background);
+/* Force full-screen on mobile */
+width: 100%;
+height: 100%;
+max-width: 100vw;
+max-height: 100vh;
+padding: 0;
+border-radius: 0; /* No rounded corners for full-screen */
+transform: translateY(20px); /* Animate from bottom */
+transition: transform 0.3s ease-in-out;
+/* Trap scrolling to prevent pull-to-refresh */
+overscroll-behavior: contain;
+}
+
+.modal-overlay.active #preview-modal .modal-content {
+transform: translateY(0);
+}
+
+/* On larger screens (tablets/desktops), revert to a pop-up style */
+@media (min-width: 768px) {
+.modal-overlay {
+background-color: rgba(0, 0, 0, 0.7); /* Revert to dark overlay */
+}
+#preview-modal .modal-content {
+height: 90%;
+width: 90%;
+max-width: 900px;
+max-height: 90vh;
+border-radius: 16px; /* Bring back rounded corners on desktop */
+}
+}
+
+/* The new header bar */
+.preview-header {
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 0.8rem 1rem;
+background-color: var(--card-background);
+border-bottom: 1px solid var(--border-color);
+flex-shrink: 0; /* Prevents the header from shrinking */
+position: relative;
+z-index: 10;
+}
+
+/* Dark Mode styles for the header */
+html.dark-mode .preview-header {
+background-color: #1e1e1e;
+}
+
+/* Title styling */
+#preview-title {
+font-size: 1.1rem;
+font-weight: 500;
+color: var(--text-primary);
+margin: 0;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+padding: 0 1rem;
+}
+
+/* Styling for all action buttons (back, download, etc.) */
+.preview-action-btn {
+background: none;
+border: none;
+font-size: 1.3rem;
+color: var(--text-secondary);
+cursor: pointer;
+padding: 0.5rem;
+border-radius: 50%;
+transition: background-color 0.2s;
+text-decoration: none;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.preview-action-btn:hover {
+background-color: var(--primary-light);
+color: var(--text-primary);
+}
+
+.preview-actions {
+display: flex;
+gap: 0.5rem;
+}
+
+/* Make the iframe fill all remaining vertical space */
+#preview-modal iframe {
+flex-grow: 1;
+border: none;
+width: 100%;
+height: 100%;
+}
+
+/* We don't need the old 'X' close button anymore */
+.modal-close {
+display: none;
+}
+
+
+/* --- SEARCH VIEW STYLES --- */
+#search-view { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--background-color);
+z-index: 1000; display: flex; flex-direction: column; pointer-events: none; opacity: 0; transform: scale(1.02);
+transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out; }
+#search-view.active { pointer-events: auto; opacity: 1; transform: scale(1); }
+.search-view-header { display: flex; align-items: center; padding: 1rem; }
+#search-back-btn { background: none; border: none; font-size: 1.3rem; color: var(--text-primary); cursor: pointer;
+margin-right: 1rem; }
+.search-input-container { display: flex; align-items: center; background-color: #f0f2f5; border-radius: 50px; padding:
+0.5rem 1rem; flex-grow: 1; }
+.search-input-container i { color: var(--text-secondary); margin-right: 0.5rem; }
+#search-view-input { width: 100%; border: none; outline: none; background: none; font-size: 1rem; font-family:
+'Poppins', sans-serif; }
+.search-view-body { padding: 1.5rem; flex-grow: 1; overflow-y: auto; }
+.search-placeholder { text-align: center; color: var(--text-secondary); margin-top: 3rem; }
+
+@media (min-width: 768px) {
+body { max-width: 700px; margin: 0 auto; }
+.page-wrapper { margin-left: 1rem; margin-right: 1rem; }
+.button-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1024px) {
+.button-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+
+
+/* --- ADD THESE NEW STYLES AT THE END OF style.css --- */
+
+/* Container for all the routine cards */
+.routines-container {
+display: flex;
+flex-direction: column;
+gap: 2rem; /* Adds nice spacing between each routine card */
+}
+
+/* Styles for a single routine card */
+.routine-card {
+background-color: var(--card-background);
+border: 1px solid var(--border-color);
+border-radius: 16px; /* A more pronounced curve for these big cards */
+overflow: hidden; /* This is important to make the image corners rounded */
+box-shadow: var(--shadow-md);
+transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.routine-card:hover {
+transform: translateY(-5px);
+box-shadow: var(--shadow-lg);
+}
+
+/* Styles for the full-width image */
+.routine-image-full {
+display: block; /* Removes any extra space below the image */
+width: 100%;
+height: auto; /* Maintains the image's aspect ratio */
+cursor: pointer;
+}
+
+/* Styles for the footer area below the image */
+.routine-footer {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 1rem 1.25rem;
+background-color: var(--background-color); /* Ensures a solid background */
+}
+
+.routine-title {
+font-size: 1.1rem;
+font-weight: 600;
+color: var(--text-primary);
+margin: 0;
+}
+
+/* Make the download button more prominent */
+.routine-footer .download-btn {
+display: flex;
+align-items: center;
+gap: 0.5rem; /* Space between the icon and text */
+padding: 0.5rem 1rem;
+border-radius: 50px; /* Pill-shaped button */
+background-color: var(--primary-light);
+color: var(--primary-color);
+text-decoration: none;
+font-weight: 500;
+}
+.routine-footer .download-btn:hover {
+background-color: #e0e0e0;
+}
+
+
+
+
+/* --- ADD THESE NEW STYLES AT THE END OF style.css --- */
+
+/* Styles for the "Our Department" page */
+.hero-banner {
+width: 100%;
+height: 180px;
+border-radius: 16px;
+overflow: hidden;
+margin-bottom: 2rem;
+background-color: var(--primary-light);
+}
+.hero-banner img {
+width: 100%;
+height: 100%;
+object-fit: cover; /* This makes the image cover the area without stretching */
+}
+
+.welcome-text {
+font-size: 1rem;
+line-height: 1.7;
+margin-bottom: 2rem;
+color: var(--text-secondary);
+}
+
+.mission-statement blockquote {
+border-left: 4px solid var(--primary-color);
+padding-left: 1.5rem;
+margin: 0 0 2rem 0;
+font-size: 1.1rem;
+font-style: italic;
+font-weight: 500;
+color: var(--text-primary);
+}
+
+.section-title-department {
+font-size: 1.1rem;
+font-weight: 600;
+padding-bottom: 0.5rem;
+margin-bottom: 1.5rem;
+border-bottom: 1px solid var(--border-color);
+}
+
+.faculty-list {
+display: flex;
+flex-direction: column;
+gap: 1.5rem; /* Space between each faculty member */
+margin-bottom: 2rem;
+}
+.faculty-member {
+display: flex;
+align-items: center;
+gap: 1rem;
+}
+.faculty-member img {
+width: 60px;
+height: 60px;
+border-radius: 50%; /* Makes the image circular */
+object-fit: cover;
+border: 2px solid var(--border-color);
+}
+.faculty-info h3 {
+font-size: 1.1rem;
+font-weight: 600;
+margin: 0;
+}
+.faculty-info p {
+font-size: 0.9rem;
+color: var(--text-secondary);
+margin: 0;
+}
+
+.quick-links {
+display: flex;
+flex-direction: column;
+gap: 0.8rem;
+}
+.quick-link-item {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 1rem 1.25rem;
+border: 1px solid var(--border-color);
+border-radius: 12px;
+background-color: var(--card-background);
+text-decoration: none;
+color: var(--text-primary);
+font-weight: 500;
+transition: all 0.2s ease;
+}
+.quick-link-item:hover {
+transform: translateY(-3px);
+box-shadow: var(--shadow-md);
+color: var(--primary-color);
+}
+/* END OF NEW STYLES */
+
+
+/* --- ADD THESE NEW STYLES AT THE END OF style.css --- */
+
+/* Facebook icon for Faculty Member */
+/* ADD THIS NEW BLOCK AT THE END OF style.css */
+.faculty-card:hover {
+transform: translateY(-3px);
+box-shadow: var(--shadow-md);
+}
+
+.faculty-card img {
+width: 60px;
+height: 60px;
+border-radius: 50%;
+object-fit: cover;
+border: 2px solid var(--border-color);
+}
+
+.faculty-info {
+flex-grow: 1; /* This makes the info take up the available space */
+}
+.faculty-info h3 {
+font-size: 1.1rem;
+font-weight: 600;
+margin: 0;
+}
+.faculty-info p {
+font-size: 0.9rem;
+color: var(--text-secondary);
+margin: 0;
+}
+
+.faculty-social a {
+font-size: 1.5rem;
+color: #1877F2; /* Facebook Blue */
+text-decoration: none;
+transition: transform 0.2s ease;
+padding: 0.5rem; /* Makes the clickable area bigger */
+}
+.faculty-social a:hover {
+transform: scale(1.1);
+}
+
+/* On larger screens, we can have two columns for the faculty */
+/* NOTE: We're adding this inside the existing media query at the bottom of your file is better */
+/* but for simplicity, adding it here will work perfectly. */
+@media (min-width: 768px) {
+.faculty-grid {
+grid-template-columns: 1fr 1fr;
+}
+}
+/* END OF NEW FACULTY STYLES */
+
+.swiper-slide {
+text-align: center;
+font-size: 18px;
+background: #fff;
+/* Center slide text vertically */
+display: flex;
+justify-content: center;
+align-items: center;
+}
+.swiper-slide img {
+display: block;
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+/* Style for the navigation arrows */
+.swiper-button-next, .swiper-button-prev {
+color: #fff !important; /* Makes arrows white */
+background-color: rgba(0,0,0,0.3);
+border-radius: 50%;
+width: 36px !important;
+height: 36px !important;
+}
+.swiper-button-next::after, .swiper-button-prev::after {
+font-size: 16px !important; /* Makes arrow icons smaller */
+font-weight: 900;
+}
+/* Style for the pagination dots */
+.swiper-pagination-bullet-active {
+background-color: #fff !important; /* Makes active dot white */
+}
+
+/* END OF NEW STYLES */
+
+/* ADD THIS STYLE TO THE END of style.css */
+.upload-category {
+font-size: 0.8rem;
+color: var(--text-secondary);
+margin-top: 2px;
+}
+
+
+
+/* --- ADD THIS BLOCK TO THE VERY END OF your style.css --- */
+
+/* STYLES FOR THE SLIDE-IN HAMBURGER MENU */
+
+.menu-backdrop {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.5);
+z-index: 1050;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.3s ease-in-out;
+}
+.menu-backdrop.is-active {
+opacity: 1;
+pointer-events: auto;
+}
+
+.side-menu {
+position: fixed;
+top: 0;
+right: 0;
+width: 300px; /* Width of the menu panel */
+max-width: 80%; /* Ensure it doesn't take up the whole screen */
+height: 100%;
+background-color: var(--card-background);
+z-index: 1051; /* Must be higher than backdrop */
+transform: translateX(100%); /* Start off-screen */
+transition: transform 0.3s ease-in-out;
+display: flex;
+flex-direction: column;
+}
+.side-menu.is-open {
+transform: translateX(0); /* Slide it into view */
+}
+
+/* Menu Header Styling */
+.menu-header {
+display: flex;
+justify-content: space-between;
+align-items: flex-start;
+padding: 1rem 1.25rem;
+border-bottom: 1px solid var(--border-color);
+}
+.menu-user-profile {
+display: flex;
+align-items: center;
+gap: 12px;
+}
+.menu-user-profile img {
+width: 48px;
+height: 48px;
+border-radius: 50%;
+object-fit: cover;
+}
+.menu-user-details {
+display: flex;
+flex-direction: column;
+}
+#menu-user-name {
+font-weight: 600;
+color: var(--text-primary);
+}
+#menu-user-year {
+font-size: 0.8rem;
+color: var(--text-secondary);
+}
+.menu-close-btn {
+background: none;
+border: none;
+font-size: 2rem;
+line-height: 1;
+color: var(--text-secondary);
+cursor: pointer;
+}
+
+/* Menu Links & Actions Styling */
+/* This is the NEW, corrected version */
+.menu-links {
+list-style: none;
+padding: 1rem 0;
+margin: 0;
+flex: 1; /* CRITICAL: Allows this element to grow and shrink */
+overflow-y: auto; /* CRITICAL: Adds a scrollbar ONLY when needed */
+}
+
+.menu-actions {
+list-style: none;
+padding: 1rem 0;
+margin: 0;
+/* margin-top: auto; was here, but flex:1 on menu-links handles it better */
+border-top: 1px solid var(--border-color);
+}
+
+.menu-actions {
+margin-top: auto; /* Pushes this section to the bottom */
+border-top: 1px solid var(--border-color);
+}
+.menu-links li a, .menu-actions li a, .menu-actions li button {
+display: flex;
+align-items: center;
+gap: 1.25rem;
+padding: 0.8rem 1.25rem;
+color: var(--text-primary);
+text-decoration: none;
+font-size: 1rem;
+font-weight: 500;
+background: none;
+border: none;
+width: 100%;
+cursor: pointer;
+text-align: left;
+}
+.menu-links li a:hover, .menu-actions li a:hover, .menu-actions li button:hover {
+background-color: var(--primary-light);
+}
+.menu-links i {
+width: 20px; /* Ensures text alignment */
+text-align: center;
+color: var(--text-secondary);
+}
+#clear-data-btn {
+color: var(--text-secondary); /* "Log Out" is a less primary action */
+}
+#clear-data-btn:hover {
+color: #e53935; /* Red on hover to indicate a destructive action */
+}
+/* END OF NEW STYLES */
+
+
+/* --- ADD THIS BLOCK TO THE END of style.css --- */
+
+/* Custom Confirmation Modal Styles */
+.confirm-modal-backdrop {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0, 0, 0, 0.6);
+z-index: 2000;
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 1rem;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.2s ease-in-out;
+}
+.confirm-modal-backdrop.is-visible {
+opacity: 1;
+pointer-events: auto;
+}
+
+.confirm-modal-content {
+background-color: var(--card-background);
+border-radius: 16px;
+padding: 2rem;
+max-width: 400px;
+width: 100%;
+text-align: center;
+box-shadow: var(--shadow-lg);
+transform: scale(0.95);
+transition: transform 0.2s ease-in-out;
+}
+.confirm-modal-backdrop.is-visible .confirm-modal-content {
+transform: scale(1);
+}
+
+.confirm-modal-content .fa-exclamation-triangle {
+font-size: 2.5rem;
+color: #f8961e; /* A warning orange color */
+margin-bottom: 1rem;
+}
+
+.confirm-modal-content h3 {
+font-size: 1.4rem;
+font-weight: 600;
+color: var(--text-primary);
+margin-bottom: 0.5rem;
+}
+
+.confirm-modal-content p {
+color: var(--text-secondary);
+margin-bottom: 1.5rem;
+}
+
+.confirm-modal-actions {
+display: flex;
+gap: 1rem;
+}
+.modal-btn {
+flex-grow: 1; /* Makes both buttons take up equal space */
+padding: 12px;
+border-radius: 8px;
+border: none;
+font-size: 1rem;
+font-weight: 600;
+cursor: pointer;
+transition: background-color 0.2s, color 0.2s;
+}
+
+.modal-btn-secondary {
+background-color: var(--primary-light);
+color: var(--text-primary);
+}
+.modal-btn-secondary:hover {
+background-color: #e0e0e0;
+}
+.modal-btn-danger {
+background-color: #d32f2f; /* A clear danger red */
+color: #fff;
+}
+.modal-btn-danger:hover {
+background-color: #b71c1c; /* Darker red on hover */
+}
+/* END OF NEW STYLES */
+
+
+
+.site-logo {
+width: 42px; /* adjust size */
+height: 42px;
+object-fit: cover; /* keeps aspect ratio */
+border-radius: 8px; /* optional, for rounded corners */
+box-shadow: var(--shadow-sm); /* matches old style */
+}
+
+
+/* ADD THIS TO THE END of css/style.css */
+
+/* --- Styles for CGPA Calculator Page --- */
+.calculator-card, .results-card, .info-card {
+background-color: var(--card-background);
+border: 1px solid var(--border-color);
+border-radius: 12px;
+padding: 1.5rem;
+margin-bottom: 1.5rem;
+box-shadow: var(--shadow-sm);
+}
+
+#courses-container {
+display: flex;
+flex-direction: column;
+gap: 1rem;
+margin: 1.5rem 0;
+}
+
+.course-row {
+display: flex;
+align-items: center;
+gap: 0.8rem;
+}
+
+.course-row .course-credits {
+width: 80px;
+padding: 10px;
+border: 1px solid var(--border-color);
+border-radius: 8px;
+text-align: center;
+}
+
+.course-row .course-grade {
+flex-grow: 1; /* Takes up available space */
+padding: 10px;
+border: 1px solid var(--border-color);
+border-radius: 8px;
+}
+
+.remove-course-btn {
+background: none;
+border: none;
+color: var(--text-secondary);
+font-size: 1.1rem;
+cursor: pointer;
+padding: 0.5rem;
+border-radius: 50%;
+transition: background-color 0.2s, color 0.2s;
+}
+.remove-course-btn:hover {
+background-color: #f8d7da;
+color: #721c24;
+}
+
+.calculator-actions {
+display: flex;
+gap: 1rem;
+margin-top: 1rem;
+}
+.calculator-actions .btn-primary,
+.calculator-actions .btn-secondary {
+flex-grow: 1;
+padding: 12px;
+border-radius: 8px;
+font-weight: 600;
+cursor: pointer;
+border: none;
+}
+.calculator-actions .btn-primary { background-color: var(--primary-color); color: #fff; }
+.calculator-actions .btn-secondary { background-color: var(--primary-light); color: var(--text-primary); }
+
+.results-card {
+border-left: 4px solid var(--success-color);
+transition: all 0.4s ease;
+}
+.results-card.hidden {
+opacity: 0;
+transform: translateY(-10px);
+pointer-events: none;
+}
+.sgpa-display {
+font-size: 1.8rem;
+font-weight: 700;
+text-align: center;
+margin-bottom: 1rem;
+}
+.sgpa-display span {
+color: var(--success-color);
+}
+.result-details {
+text-align: center;
+color: var(--text-secondary);
+}
+
+.info-card {
+background-color: var(--primary-light);
+border-color: transparent;
+}
+
+/* === Styles for Announcement Page (V2 - Card Layout) === */
+.announcements-container {
+display: flex;
+flex-direction: column;
+gap: 2rem; /* The space between each card */
+}
+
+.announcement-card {
+background-color: var(--card-background);
+border: 1px solid var(--border-color);
+border-radius: 16px; /* A nice, modern radius */
+overflow: hidden; /* This is critical for the image corners */
+box-shadow: var(--shadow-sm);
+transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.announcement-card:hover {
+transform: translateY(-5px);
+box-shadow: var(--shadow-md);
+}
+
+.announcement-image {
+width: 100%;
+/* Use aspect-ratio for a consistent image shape */
+aspect-ratio: 16 / 9;
+background-color: var(--primary-light);
+}
+
+.announcement-image img {
+width: 100%;
+height: 100%;
+object-fit: cover; /* Prevents images from stretching */
+}
+
+.announcement-content {
+padding: 1.5rem;
+}
+
+.announcement-content h2 {
+font-size: 1.3rem;
+font-weight: 600;
+margin-top: 0;
+margin-bottom: 0.5rem; /* Reduced space below title */
+}
+
+.announcement-meta {
+font-size: 0.85rem;
+color: var(--text-secondary);
+display: flex;
+align-items: center;
+gap: 0.5rem;
+margin-bottom: 1.5rem; /* Space between date and description */
+}
+
+.announcement-description {
+color: var(--text-primary);
+line-height: 1.8;
+margin: 0;
+}
+
+/* ADD THIS TO THE END of css/style.css */
+
+/* --- Styles for Homepage Announcement Summary --- */
+.recent-announcement {
+margin-bottom: 2rem;
+}
+.announcement-summary-card {
+background-color: var(--card-background);
+border: 1px solid var(--border-color);
+border-radius: 12px;
+box-shadow: var(--shadow-sm);
+cursor: pointer;
+overflow: hidden;
+transition: all 0.2s ease-in-out;
+position: relative;
+}
+.announcement-summary-card:hover {
+transform: translateY(-3px);
+box-shadow: var(--shadow-md);
+}
+.summary-image {
+width: 100%;
+height: 120px;
+overflow: hidden;
+}
+.summary-image img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+.summary-content h4 {
+font-weight: 600;
+margin: 0;
+}
+.summary-content p {
+font-size: 0.7rem;
+color: var(--text-secondary);
+margin: 0.5rem 0 0 0;
+}
+
+/* --- FINAL Styles for Announcement Detail Modal & Scrolling --- */
+
+/* Rule 1: Allow the dark background to scroll */
+.confirm-modal-backdrop {
+overflow-y: auto;
+}
+
+/* Rule 2: Style the pop-up itself and allow it to scroll */
+#announcement-detail-modal .confirm-modal-content {
+text-align: left;
+padding: 0;
+margin: auto 0; /* The key for scrolling */
+}
+
+/* Rule 3: Style the image inside the pop-up */
+.announcement-modal-image {
+width: 100%;
+border-top-left-radius: 16px;
+border-top-right-radius: 16px;
+}
+.announcement-modal-image img {
+width: 100%;
+height: auto;
+display: block;
+max-height: 50vh; /* We will use the larger 50vh size */
+object-fit: contain;
+}
+
+/* Rule 4: Style the text content inside the pop-up */
+.announcement-modal-body {
+padding: 1.5rem;
+}
+#modal-announcement-title {
+font-size: 1.4rem;
+font-weight: 600;
+margin-bottom: 1rem;
+}
+#modal-announcement-description {
+line-height: 1.5;
+color: var(--text-primary);
+}
+.announcement-modal-content .confirm-modal-actions {
+padding: 0 1.5rem 1.5rem 1.5rem;
+}
+/* ===== Global Loading Spinner ===== */
+/* Add these styles to the very end of your style.css file */
+
+.loader-wrapper {
+position: fixed; /* Cover the entire screen */
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: #ffffff; /* Use the site's background color */
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 9999; /* Highest z-index to be on top of everything */
+transition: opacity 0.5s ease; /* Smooth fade-out effect */
+}
+
+.loader {
+border: 8px solid #f3f3f3; /* Light grey circle */
+border-top: 8px solid #0a0a0a; /* Blue for the spinning part (matches primary-color) */
+border-radius: 50%;
+width: 60px;
+height: 60px;
+animation: spin 1.5s linear infinite; /* The animation */
+}
+
+/* This class is added by JavaScript to hide the spinner */
+.loader-wrapper.hidden {
+opacity: 0;
+visibility: hidden; /* Hides and removes from interaction */
+}
+
+/* The spinning animation */
+@keyframes spin {
+0% { transform: rotate(0deg); }
+100% { transform: rotate(360deg); }
+}
+/*
+* V3: THE BEST - COMPOSABLE & SEMANTIC VARIABLES
+* ==============================================================
+* Define spacing primitives, not final "magic numbers".
+* Everything is derived from a single source of truth.
+*/
+
+:root {
+--header-base-padding: 1rem;
+--header-content-height: 58px; /* The height of just the content (logo, nav links, etc.) */
+--safe-area-top: 0px; /* Default to 0 for web */
+}
+
+/* Base styles (for the standard, non-wrapper app) */
+.header,
+.search-view-header,
+.menu-header {
+/* The total padding is the base padding PLUS the safe area */
+padding-top: calc(var(--header-base-padding) + var(--safe-area-top));
+padding-bottom: var(--header-base-padding);
+}
+/* ============================================================= */
+/* ===== START: AUTOMATIC DARK MODE STYLES ===== */
+/* ============================================================= */
+
+/*
+* This block defines the new color palette for dark mode.
+* It's applied whenever the <html> element has the class "dark-mode".
+*/
+html.dark-mode {
+--primary-color: #ffffff; /* Using a light blue as the primary accent in dark mode */
+--primary-light: #2a2a2a; /* A dark gray for hover effects */
+--background-color: #121212; /* A deep, off-black for the main background */
+--card-background: #1e1e1e; /* A slightly lighter gray for cards and modals */
+--text-primary: #e9ecef; /* A light gray for primary text, easy on the eyes */
+--text-secondary: #adb5bd; /* A dimmer gray for secondary text */
+--border-color: #373737; /* A subtle border color for dark backgrounds */
+--shadow-sm: 0 1px 3px rgba(0,0,0,0.3); /* Shadows are darker on a dark theme */
+--shadow-md: 0 4px 6px rgba(0,0,0,0.3);
+--shadow-lg: 0 10px 15px rgba(0,0,0,0.3);
+--success-color: #40c057; /* A slightly brighter green for success states */
+html.dark-mode .modal-content iframe {
+filter: invert(1) hue-rotate(180deg);
+}
+html.dark-mode .book-card img {
+border-color: rgba(255, 255, 255, 0.35);
+}
+}
+
+/* Specific overrides for elements that need tweaking in dark mode */
+html.dark-mode .search-input-container {
+background-color: #333; /* The existing rule */
+}
+
+/* --- THIS IS THE FIX --- */
+html.dark-mode #search-view-input {
+color: var(--text-primary); /* Sets the typed text color to light grey */
+}
+
+html.dark-mode #search-view-input::placeholder {
+color: var(--text-secondary); /* Sets the placeholder text to a dimmer grey */
+}
+
+html.dark-mode .header {
+background-color: rgba(30, 30, 30, 0.8); /* Dark, translucent header */
+}
+
+html.dark-mode .loader {
+border: 8px solid #333; /* Darker loader track */
+border-top: 8px solid #4dabf7; /* Use the new primary accent color */
+}
+
+html.dark-mode .sgpa-class-display .third-class {
+color: var(--text-primary) !important;
+background-color: #ffc107;
+}
+
+html.dark-mode .faculty-social a {
+color: #4dabf7; /* Use the new primary accent for the FB icon */
+}
+
+html.dark-mode .modal-btn-secondary {
+background-color: #373737;
+color: #f1f3f5;
+}
+html.dark-mode .modal-btn-secondary:hover {
+background-color: #495057;
+}
+
+/* --- PASTE THE NEW FIX HERE --- */
+
+/* FIX for primary buttons with light backgrounds in dark mode */
+html.dark-mode .calculator-actions .btn-primary,
+html.dark-mode .modal-btn.modal-btn-primary {
+background-color: var(--primary-color); /* This is already correct (the light blue) */
+color: #0a0a0a; /* EXPLICITLY set text to a dark color for high contrast */
+font-weight: 700; /* Make it a bit bolder */
+}
+
+/* Optional but recommended: A slightly adjusted hover state for the modal button */
+html.dark-mode .modal-btn.modal-btn-primary:hover {
+background-color: #8b9399; /* A slightly darker blue on hover */
+}
+/* ===== END: AUTOMATIC DARK MODE STYLES ===== */
+
+/* --- ADD THESE NEW STYLES TO THE END OF style.css --- */
+
+/* Styles for the new Book Grid */
+.book-grid {
+display: grid;
+/* MODIFIED: The minimum width is now smaller (100px) to allow for 3 columns on mobile. */
+grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+/* MODIFIED: The gap is slightly reduced for a tighter grid. */
+gap: 1rem;
+padding-top: 1rem; /* A bit of space from the accordion header */
+}
+
+/* Styles for a single Book Card */
+.book-card {
+text-decoration: none;
+color: var(--text-primary);
+display: flex;
+flex-direction: column;
+text-align: center;
+transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.book-card:hover {
+transform: translateY(-5px);
+}
+
+.book-card img {
+width: 100%;
+aspect-ratio: 2 / 3;
+object-fit: cover;
+border-radius: 8px;
+margin-bottom: 0.75rem;
+box-shadow: var(--shadow-md);
+background-color: var(--primary-light);
+/* NEW: Add a subtle border for definition */
+border: 1px solid rgba(0, 0, 0, 0.35);
+}
+
+.book-card:hover img {
+box-shadow: var(--shadow-lg);
+}
+
+.book-card h4 {
+/* MODIFIED: Font size is slightly smaller to fit the new card size. */
+font-size: 0.85rem;
+font-weight: 500;
+/* Prevents long titles from breaking the layout */
+line-height: 1.4;
+max-height: 2.8em; /* Roughly 2 lines of text */
+overflow: hidden;
+text-overflow: ellipsis;
+}
+
+/* --- ADD THESE NEW STYLES TO THE END OF style.css --- */
+
+/* --- Bottom Navigation Bar Styles --- */
+.bottom-nav {
+position: fixed;
+bottom: 0;
+left: 0;
+width: 100%;
+height: calc(60px + env(safe-area-inset-bottom));
+background-color: var(--card-background);
+display: flex;
+justify-content: space-around; /* Distributes items evenly */
+align-items: center;
+box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+border-top: 1px solid var(--border-color);
+z-index: 1000;
+/* ADD THESE LINES ↓ */
+padding-bottom: calc(env(safe-area-inset-bottom) - 1.2rem);
+}
+
+.bottom-nav .nav-link {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+flex-grow: 1; /* Each item takes equal space */
+height: 100%;
+text-decoration: none;
+color: var(--text-secondary); /* Inactive color */
+transition: color 0.2s ease-in-out;
+}
+
+.bottom-nav .nav-link i {
+font-size: 1.3rem; /* Icon size */
+margin-bottom: 4px;
+}
+
+.bottom-nav .nav-link span {
+font-size: 0.7rem; /* Text size */
+font-weight: 500;
+}
+
+/* Style for the active link */
+.bottom-nav .nav-link.active {
+color: var(--primary-color);
+}
+
+/*
+* CRITICAL: Prevent content from hiding behind the bottom navigation.
+* Add padding to the bottom of the body. We'll add a bit extra for spacing.
+*/
+body {
+/*
+* THE FIX: This dynamically calculates the required padding.
+* It takes the nav bar's base height (60px) and adds the
+* safe area height, ensuring no content is ever hidden.
+* We add an extra 20px for comfortable visual spacing.
+*/
+padding-bottom: calc(60px + env(safe-area-inset-bottom) + 20px);
+}
+
+/* On desktop, the bottom bar can be distracting. Let's hide it. */
+@media (min-width: 768px) {
+.bottom-nav {
+display: none;
+}
+body {
+padding-bottom: 1rem; /* Reset padding on desktop */
+}
+}
+
+/* --- REPLACE the old logout button CSS with this --- */
+
+/* --- Profile Page Logout Button --- */
+.logout-button-container {
+margin-top: 1.5rem;
+}
+
+.logout-button {
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 0.8rem;
+width: 100%;
+padding: 14px;
+border-radius: 12px;
+font-size: 1rem;
+font-weight: 600;
+cursor: pointer;
+background-color: var(--primary-light);
+color: #e53935; /* Use a brighter danger red for better contrast */
+border: none;
+transition: all 0.2s ease-in-out;
+}
+
+.logout-button:hover {
+background-color: #e53935;
+color: #ffffff; /* Explicitly set to white */
+}
+
+/* --- Bookmark Button Styles --- */
+.bookmark-btn {
+background: none;
+border: none;
+color: var(--text-secondary);
+font-size: 1.1rem; /* Slightly larger for easier tapping */
+cursor: pointer;
+padding: 0.5rem;
+border-radius: 50%;
+transition: all 0.2s;
+margin-left: 0.5rem; /* Space between it and the download button */
+}
+
+.bookmark-btn:hover {
+background-color: var(--primary-light);
+color: #f7b731; /* A nice gold color for hover */
+}
+
+/* This is the style for a saved item */
+.bookmark-btn.active {
+color: #f7b731; /* Solid gold color */
+}
+
+/* --- ADD THIS NEW STYLE TO THE END OF style.css --- */
+
+/* --- "Remove Bookmark" Button Style for Profile Page --- */
+.unbookmark-btn {
+background: none;
+border: none;
+color: var(--text-secondary);
+font-size: 1.1rem;
+cursor: pointer;
+padding: 0.5rem;
+border-radius: 50%;
+transition: all 0.2s ease-in-out;
+margin-left: 0.5rem;
+}
+
+.unbookmark-btn:hover {
+background-color: var(--primary-light);
+color: #e53935; /* Danger red on hover */
+}
+
+/* --- ADD THIS NEW STYLE TO THE END OF style.css --- */
+
+/* --- Bookmark Icon Style for Book Cards --- */
+.book-card {
+position: relative; /* This is crucial for positioning the icon */
+}
+
+.book-card .bookmark-btn {
+position: absolute; /* Position the icon relative to the card */
+top: 8px; /* Distance from the top */
+right: 8px; /* Distance from the right */
+
+font-size: 1.4rem; /* Make the icon a bit larger */
+color: white; /* White is best for contrast on an image */
+text-shadow: 0 1px 3px rgba(0,0,0,0.5); /* Drop shadow for readability */
+
+background-color: rgba(0,0,0,0.3); /* Semi-transparent background */
+width: 32px; /* Set explicit width */
+height: 32px; /* Set explicit height */
+
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 0;
+
+z-index: 10; /* Make sure it's on top of the image */
+}
+
+/* On hover, make it slightly less transparent */
+.book-card .bookmark-btn:hover {
+background-color: rgba(0,0,0,0.5);
+}
+
+/* Keep the same active (gold) color for saved items */
+.book-card .bookmark-btn.active {
+color: #f7b731;
+background-color: rgba(0,0,0,0.5);
+}
+
+
+/* ============================================================= */
+/* ===== STYLES FOR NEW SMART CONTENT CARD (Phase 2) ===== */
+/* ============================================================= */
+
+.content-card-list {
+display: flex;
+flex-direction: column;
+gap: 1rem;
+margin-bottom: 2.5rem; /* Space after the last card in a subject list */
+}
+
+.content-card {
+background-color: var(--card-background);
+border: 1px solid var(--border-color);
+border-radius: 12px;
+overflow: hidden;
+transition: box-shadow 0.2s ease-in-out;
+}
+
+.content-card:hover {
+box-shadow: var(--shadow-md);
+}
+
+.card-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 1rem 1.25rem;
+cursor: pointer;
+user-select: none;
+}
+
+.card-header h4 {
+font-size: 1rem;
+font-weight: 500;
+margin: 0;
+flex: 1;
+padding-right: 1rem;
+}
+
+.card-header .toggle-icon {
+font-size: 1.1rem;
+transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+color: var(--text-secondary);
+}
+
+.content-card.is-open .toggle-icon {
+transform: rotate(180deg);
+}
+
+.card-body {
+max-height: 0;
+overflow: hidden;
+transition: max-height 0.4s ease-out;
+padding-left: 1.25rem;
+padding-right: 1.25rem;
+}
+
+.card-content-wrapper {
+padding-top: 1rem;
+padding-bottom: 1.25rem;
+}
+
+.card-description {
+font-size: 0.95rem;
+color: var(--text-secondary);
+line-height: 1.7;
+padding-bottom: 1rem;
+border-bottom: 1px solid var(--border-color);
+margin-bottom: 1rem;
+white-space: normal;
+}
+
+/* --- Action Buttons (Final, Corrected Version) --- */
+.card-actions {
+display: flex;
+justify-content: center; /* THE FIX IS HERE */
+gap: 0.5rem;
+margin-bottom: 1.5rem;
+align-items: center;
+}
+
+/* Base style for ALL buttons */
+.card-actions .btn {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 0.5rem;
+text-decoration: none;
+/* THE CHANGE IS HERE: Reduced horizontal padding */
+padding: 0.6rem 0.8rem;
+border-radius: 50px;
+font-weight: 500;
+font-size: 0.85rem;
+border: none;
+cursor: pointer;
+white-space: nowrap;
+transition: transform 0.2s ease;
+}
+
+.card-actions .btn:hover {
+transform: translateY(-2px);
+}
+
+/* Style for secondary bookmark button */
+.card-actions .btn-bookmark {
+background-color: var(--primary-light);
+color: var(--text-secondary);
+border: 1px solid transparent;
+}
+
+/* Style for the TWO primary action buttons */
+.card-actions .btn-preview,
+.card-actions .btn-download {
+background-color: var(--primary-color);
+color: #fff; /* White text on dark bg for LIGHT mode */
+}
+
+html.dark-mode .card-actions .btn-preview,
+html.dark-mode .card-actions .btn-download {
+color: #0a0a0a; /* Dark text on white bg for DARK mode */
+}
+
+/* --- Hover and Active States for Bookmark Button --- */
+.card-actions .btn-bookmark:hover {
+border-color: #f7b731;
+}
+
+.card-actions .btn-bookmark.active {
+background-color: #f7b731;
+color: #fff;
+font-weight: 600;
+}
+
+html.dark-mode .card-actions .btn-bookmark.active {
+color: #0a0a0a;
+}
+
+.card-actions .btn-bookmark.active i {
+font-weight: 900;
+}
+
+/* --- Video Playlist Styles (Final Polished Version) --- */
+.video-playlist-section {
+padding-top: 5px;
+}
+
+.video-playlist-section h5 {
+font-size: 1.1rem;
+font-weight: 600;
+margin-bottom: 1rem;
+}
+
+.video-player-wrapper {
+position: relative;
+width: 100%;
+padding-top: 56.25%;
+background-color: #000;
+border-radius: 16px;
+overflow: hidden;
+box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.video-player-wrapper iframe {
+position: absolute;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+border: none;
+}
+
+.video-player-controls {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-top: 0.75rem;
+}
+
+.video-player-controls button {
+background: none;
+border: 1px solid var(--border-color);
+color: var(--text-secondary);
+font-size: 1rem;
+width: 40px;
+height: 40px;
+border-radius: 50%;
+cursor: pointer;
+transition: all 0.2s ease;
+}
+
+.video-player-controls button:hover {
+background-color: var(--primary-light);
+color: var(--primary-color);
+}
+
+.video-player-controls button:disabled {
+opacity: 0.5;
+cursor: not-allowed;
+}
+
+.video-current-title {
+flex: 1;
+text-align: center;
+font-weight: 500;
+padding: 0 1rem;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+
+.video-thumbnail-reel {
+margin-top: 1rem;
+padding: 5px;
+margin-left: -5px;
+margin-right: -5px;
+display: flex;
+gap: 0.75rem;
+overflow-x: auto;
+-webkit-overflow-scrolling: touch;
+scrollbar-width: none;
+}
+
+.video-thumbnail-reel::-webkit-scrollbar {
+display: none;
+}
+
+.video-thumbnail {
+flex: 0 0 110px;
+width: 110px;
+cursor: pointer;
+border-radius: 12px;
+position: relative;
+transition: transform 0.2s ease;
+}
+
+.video-thumbnail img {
+width: 100%;
+height: 65px;
+object-fit: cover;
+display: block;
+border-radius: 10px;
+transition: transform 0.2s ease;
+}
+
+.video-thumbnail:hover img {
+transform: scale(1.05);
+}
+
+.video-thumbnail::before {
+content: '';
+position: absolute;
+top: -3px;
+left: -3px;
+right: -3px;
+bottom: -3px;
+border: 3px solid var(--primary-color);
+border-radius: 14px;
+opacity: 0;
+transition: opacity 0.2s ease;
+pointer-events: none;
+}
+
+.video-thumbnail.active::before {
+opacity: 1;
+}
+
+/* --- Style for Static Subject Headings --- */
+.subject-heading {
+font-size: 1.3rem;
+font-weight: 600;
+padding-bottom: 0.75rem;
+margin-bottom: 1.25rem;
+border-bottom: 1px solid var(--border-color);
+margin-top: 2.5rem;
+}
+
+.subject-heading:first-of-type {
+margin-top: 0;
+}
+
+/* --- Styles for Book Card Actions (v2 - Icon Only) --- */
+.book-card-actions {
+display: flex;
+justify-content: center; /* Center the buttons neatly */
+gap: 0.75rem;
+margin-top: 0.75rem;
+}
+
+/* Base style for the buttons */
+.book-action-btn {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+text-decoration: none;
+cursor: pointer;
+border: 1px solid var(--border-color);
+background-color: var(--primary-light);
+color: var(--text-secondary);
+transition: all 0.2s ease;
+}
+
+/* Specific styles for the small, circular icon buttons */
+.book-action-icon {
+width: 40px;
+height: 40px;
+border-radius: 50%;
+font-size: 1rem;
+}
+
+.book-action-btn:hover {
+background-color: #e0e0e0;
+color: var(--text-primary);
+}
+
+html.dark-mode .book-action-btn:hover {
+background-color: #333;
+}
+
+.book-action-btn.bookmark-btn.active {
+border-color: #f7b731;
+background-color: #f7b731;
+color: #fff;
+}
+
+html.dark-mode .book-action-btn.bookmark-btn.active {
+color: #0a0a0a;
+}
+
+.book-action-btn.bookmark-btn.active i {
+font-weight: 900;
+}
+
+/* --- Styles for User Stats Grid on Profile --- */
+.user-stats-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 0.5rem;
+margin-top: 1.5rem;
+border-top: 1px solid var(--border-color);
+padding-top: 1.5rem;
+}
+
+.stat-item {
+display: flex;
+flex-direction: column;
+align-items: center;
+text-align: center;
+background-color: var(--primary-light);
+padding: 1rem 0.5rem;
+border-radius: 12px;
+}
+
+.stat-item i {
+font-size: 1.3rem;
+color: var(--primary-color);
+margin-bottom: 0.5rem;
+}
+
+.stat-value {
+font-size: 1.1rem;
+font-weight: 600;
+color: var(--text-primary);
+line-height: 1.2;
+}
+
+.stat-label {
+font-size: 0.75rem;
+color: var(--text-secondary);
+}
+
+/* --- Styles for QOTD Homepage Widget --- */
+.qotd-widget-card {
+background-color: var(--card-background);
+border: 1px solid var(--border-color);
+border-left: 4px solid var(--primary-color);
+border-radius: 12px;
+margin-bottom: 2rem;
+box-shadow: var(--shadow-sm);
+transition: all 0.2s ease-in-out;
+}
+.qotd-widget-card:hover {
+box-shadow: var(--shadow-md);
+transform: translateY(-3px);
+}
+.widget-header {
+display: flex;
+align-items: center;
+gap: 0.8rem;
+padding: 1rem 1.25rem;
+border-bottom: 1px solid var(--border-color);
+}
+.widget-header i {
+font-size: 1.2rem;
+color: var(--primary-color);
+}
+.widget-header h3 {
+margin: 0;
+font-size: 1.1rem;
+font-weight: 600;
+}
+.widget-body {
+padding: 1rem 1.25rem;
+}
+.widget-body p {
+font-size: 0.95rem;
+color: var(--text-secondary);
+line-height: 1.7;
+margin: 0;
+}
+.widget-footer {
+padding: 0 1.25rem 1.25rem 1.25rem;
+}
+.widget-footer .btn-primary {
+display: block; /* Makes it full-width */
+text-align: center;
+padding: 12px;
+border-radius: 8px;
+text-decoration: none;
+font-weight: 600;
+background-color: var(--primary-color);
+color: #fff;
+}
+html.dark-mode .widget-footer .btn-primary {
+color: #0a0a0a;
+}
+/* Add this new rule to your stylesheet */
+.widget-image {
+display: block;
+max-width: 100%;
+height: auto;
+border-radius: 8px;
+margin: 0 auto 1rem auto; /* Center the image and add space below it */
+}
+
+/* === Styles for Announcement Carousel & New Modal === */
+
+/* New Fullscreen Modal Styles */
+.fullscreen-modal-backdrop {
+position: fixed;
+top: 0; left: 0;
+width: 100%; height: 100%;
+background-color: var(--card-background);
+z-index: 2000;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.3s ease;
+display: flex; /* This helps with animation */
+}
+.fullscreen-modal-backdrop.is-visible {
+opacity: 1;
+pointer-events: auto;
+}
+.fullscreen-modal-content {
+width: 100%; height: 100%;
+display: flex;
+flex-direction: column;
+transform: translateY(20px);
+transition: transform 0.3s ease;
+}
+.fullscreen-modal-backdrop.is-visible .fullscreen-modal-content {
+transform: translateY(0);
+}
+.fullscreen-modal-header {
+display: flex;
+align-items: center;
+gap: 1rem;
+padding: 0.8rem 1rem;
+border-bottom: 1px solid var(--border-color);
+flex-shrink: 0;
+}
+.modal-action-btn {
+background: none; border: none; font-size: 1.3rem;
+color: var(--text-secondary); cursor: pointer; padding: 0.5rem;
+border-radius: 50%;
+}
+.fullscreen-modal-header h3 {
+margin: 0; font-size: 1.1rem;
+font-weight: 500;
+}
+.fullscreen-modal-body {
+padding: 1.5rem;
+flex-grow: 1;
+overflow-y: auto; /* Enable scrolling for long content */
+}
+.fullscreen-modal-body img {
+max-width: 100%;
+border-radius: 8px;
+margin-bottom: 1.5rem;
+}
+.fullscreen-modal-body p {
+line-height: 1.8;
+}
+
+/* === Styles for V2 Announcement Carousel === */
+.announcement-swiper-v2 {
+width: 100%;
+/* THIS IS THE KEY CHANGE: Forces a 1:1 square ratio */
+aspect-ratio: 4 / 3;
+border-radius: 12px;
+box-shadow: var(--shadow-sm);
+}
+.announcement-swiper-v2 .swiper-pagination-bullet-active {
+background: #fff; /* White active dot is better on dark overlays */
+}
+
+.announcement-slide-card {
+display: flex;
+flex-direction: column;
+justify-content: flex-end; /* Align content to the bottom */
+width: 100%;
+height: 100%;
+position: relative;
+overflow: hidden;
+text-decoration: none;
+}
+
+.announcement-slide-card .card-background-image {
+position: absolute;
+top: 0; left: 0;
+width: 100%; height: 100%;
+object-fit: cover;
+transition: transform 0.4s ease;
+}
+.announcement-slide-card:hover .card-background-image {
+transform: scale(1.05); /* Subtle zoom effect on hover */
+}
+
+/* Gradient overlay for text readability */
+.announcement-slide-card .card-overlay {
+position: absolute;
+bottom: 0; left: 0;
+width: 100%; height: 80%;
+background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+}
+
+/* Content for slides WITH an image */
+.announcement-slide-card.has-image .card-content {
+position: relative;
+z-index: 2;
+padding: 1rem 1.25rem;
+color: #fff;
+}
+
+.announcement-slide-card.has-image .card-title {
+font-size: 1.1rem; /* Smaller title as requested */
+font-weight: 600;
+margin: 0;
+/* Clamp title to 2 lines */
+display: -webkit-box;
+-webkit-line-clamp: 2;
+-webkit-box-orient: vertical;
+overflow: hidden;
+}
+
+/* Content for slides WITHOUT an image */
+.announcement-slide-card.no-image {
+background-color: var(--primary-light);
+justify-content: center; /* Vertically center content */
+}
+
+.announcement-slide-card.no-image .card-content {
+padding: 1.5rem;
+}
+
+.announcement-slide-card.no-image .card-title {
+color: var(--text-primary);
+font-size: 1.2rem;
+margin-bottom: 0.5rem;
+}
+
+.announcement-slide-card.no-image .card-description-snippet {
+color: var(--text-secondary);
+font-size: 0.9rem;
+display: -webkit-box;
+-webkit-line-clamp: 3;
+-webkit-box-orient: vertical;
+overflow: hidden;
+}
+.helpful-links-section {
+margin-bottom: 2rem; /* Adds the necessary breathing room at the bottom */
+}
+
+/* THE FIX PART 1: The entire modal is the scrollable container */
+#announcement-detail-modal .fullscreen-modal-content {
+display: block; /* No longer a flex container */
+width: 100%;
+height: 100%;
+overflow-y: auto; /* Enable vertical scrolling for the whole thing */
+-webkit-overflow-scrolling: touch;
+
+/* THE FIX PART 2: Safe area padding is applied to the scrollable container */
+padding-bottom: 2rem;
+
+transform: translateY(20px);
+transition: transform 0.3s ease;
+}
+
+.fullscreen-modal-backdrop.is-visible .fullscreen-modal-content {
+transform: translateY(0);
+}
+
+/* THE FIX PART 3: The header is now a simple block element that scrolls with the content */
+#announcement-detail-modal .fullscreen-modal-header {
+display: flex;
+align-items: center;
+gap: 1rem;
+padding: 0.8rem 1rem;
+}
+#announcement-detail-modal .modal-action-btn {
+background: none; border: none; font-size: 1.3rem;
+color: var(--text-secondary); cursor: pointer; padding: 0.5rem;
+border-radius: 50%;
+}
+#announcement-detail-modal .fullscreen-modal-header h3 {
+margin: 0;
+font-size: 1.2rem; /* Smaller font size as requested */
+font-weight: 500;
+}
+
+/* The body that contains the image and text */
+#announcement-detail-modal .fullscreen-modal-body {
+padding: 1rem 1.5rem; /* Standard padding */
+overflow-y: visible; /* It no longer needs to scroll itself */
+}
+
+#announcement-detail-modal .fullscreen-modal-body img {
+max-width: 100%;
+border-radius: 8px;
+margin-bottom: 1.5rem;
+}
+
+#announcement-detail-modal .fullscreen-modal-body p {
+line-height: 1.8;
+padding-bottom: 2rem;
+}
+/* === Styles for V2 Announcement Carousel === */
+.announcement-swiper-v2 {
+width: 100%;
+/* THIS IS THE KEY CHANGE: Forces a 1:1 square ratio */
+aspect-ratio: 4 / 3;
+border-radius: 12px;
+box-shadow: var(--shadow-sm);
+}
+.announcement-swiper-v2 .swiper-pagination-bullet-active {
+background: #fff; /* White active dot is better on dark overlays */
+}
+
+.announcement-slide-card {
+display: flex;
+flex-direction: column;
+justify-content: flex-end; /* Align content to the bottom */
+width: 100%;
+height: 100%;
+position: relative;
+overflow: hidden;
+text-decoration: none;
+}
+
+.announcement-slide-card .card-background-image {
+position: absolute;
+top: 0; left: 0;
+width: 100%; height: 100%;
+object-fit: cover;
+transition: transform 0.4s ease;
+}
+.announcement-slide-card:hover .card-background-image {
+transform: scale(1.05); /* Subtle zoom effect on hover */
+}
+
+/* Gradient overlay for text readability */
+.announcement-slide-card .card-overlay {
+position: absolute;
+bottom: 0; left: 0;
+width: 100%; height: 80%;
+background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+}
+
+/* Content for slides WITH an image */
+.announcement-slide-card.has-image .card-content {
+position: relative;
+z-index: 2;
+padding: 1rem 1.25rem;
+color: #fff;
+}
+
+.announcement-slide-card.has-image .card-title {
+font-size: 1.1rem; /* Smaller title as requested */
+font-weight: 600;
+margin: 0;
+/* Clamp title to 2 lines */
+display: -webkit-box;
+-webkit-line-clamp: 2;
+-webkit-box-orient: vertical;
+overflow: hidden;
+}
+
+/* Content for slides WITHOUT an image */
+.announcement-slide-card.no-image {
+background-color: var(--primary-light);
+justify-content: center; /* Vertically center content */
+}
+
+.announcement-slide-card.no-image .card-content {
+padding: 1.5rem;
+}
+
+.announcement-slide-card.no-image .card-title {
+color: var(--text-primary);
+font-size: 1.2rem;
+margin-bottom: 0.5rem;
+}
+
+.announcement-slide-card.no-image .card-description-snippet {
+color: var(--text-secondary);
+font-size: 0.9rem;
+display: -webkit-box;
+-webkit-line-clamp: 3;
+-webkit-box-orient: vertical;
+overflow: hidden;
+}
+
+/* ============================================================= */
+/* ===== V4 (FINAL): ROBUST WRAPPER APP TOP SPACING (NO PADDING) ===== */
+/* ============================================================= */
+
+/*
+* This block defines the safe area variable for the wrapper.
+* It uses a 24px fallback value for devices that don't support env().
+*/
+.wrapper-app {
+--safe-area-top: env(safe-area-inset-top, 24px);
+}
+
+/*
+* This block applies the spacing using the variable defined above.
+* THE FIX: The extra "+ 0.5rem" padding has been removed.
+*/
+.wrapper-app .header,
+.wrapper-app .search-view-header,
+.wrapper-app .menu-header {
+padding-top: var(--safe-area-top);
+}
+
+/* The page wrapper's margin is also updated to remove the extra padding. */
+.wrapper-app .page-wrapper {
+margin-top: calc(
+var(--safe-area-top) +
+var(--header-content-height) +
+var(--header-base-padding)
+);
+}
+
+/* --- ADD THIS ENTIRE NEW BLOCK TO THE END OF style.css --- */
+
+/* --- Custom Styles for Contact Options Modal --- */
+
+/* Style the main icon at the top of the modal */
+#contact-options-modal .fa-question-circle {
+    /* To hide the icon, we simply use display: none */
+    display: none;
+}
+
+/* Vertically center the heading now that the icon is gone */
+#contact-options-modal h3 {
+    margin-top: 0;
+}
+
+/* Target the container for all the action buttons */
+#contact-options-modal .confirm-modal-actions {
+    width: 100%;
+    margin-top: 1.5rem; /* Add some space above the first button */
+}
+
+/* Style for the "Send a Message" button/link */
+#contact-options-modal a.modal-btn-primary {
+    /* Make it look like a text link instead of a button */
+    background-color: transparent;
+    color: var(--primary-color);
+    padding: 0.75rem 0;
+    text-decoration: none; /* Removes the underline by default */
+    font-weight: 600;
+}
+html.dark-mode #contact-options-modal a.modal-btn-primary {
+    color: #4dabf7; /* Use a bright blue in dark mode for visibility */
+}
+
+#contact-options-modal a.modal-btn-primary:hover {
+    text-decoration: underline; /* Add underline only on hover */
+}
+
+
+/* Style for the main "Contact on X" button */
+#contact-options-modal a.modal-btn-secondary[target="_blank"] {
+    background-color: #1DA1F2; /* Twitter Blue */
+    color: white;
+    border: none;
+    font-weight: 600;
+    padding: 14px; /* Give it more height */
+    text-decoration: none; /* Ensure no underline */
+}
+#contact-options-modal a.modal-btn-secondary[target="_blank"]:hover {
+    background-color: #0c85d0; /* A slightly darker blue on hover */
+}
+
+
+/* Style for the "Cancel" button */
+#contact-options-modal #contact-modal-cancel-btn {
+    background-color: var(--primary-light); /* Matches your "Secondary" modal button style */
+    color: var(--text-secondary);
+    border: none;
+    padding: 14px; /* Give it more height */
+}
+#contact-options-modal #contact-modal-cancel-btn:hover {
+     background-color: #e0e0e0;
+}
+
+html.dark-mode #contact-options-modal #contact-modal-cancel-btn {
+    background-color: #373737;
+    color: #f1f3f5;
+}
+html.dark-mode #contact-options-modal #contact-modal-cancel-btn:hover {
+    background-color: #495057;
+}
+
+/* Make sure all modal buttons have a smooth transition */
+#contact-options-modal .modal-btn {
+    transition: all 0.2s ease;
+}
+
+/* ---- END OF NEW STYLES ---- */

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Drive File & Folder Converter</title>
+    <style>
+        body {
+            background: #f9fafb;
+            color: #111827;
+            font-family: "Poppins", Arial, sans-serif;
+            padding: 20px;
+            margin: 0;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 900px;
+            margin: auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        textarea,
+        button {
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #d1d5db;
+            outline: none;
+            margin: 5px 0;
+            font-size: 16px;
+            font-family: inherit;
+        }
+
+        textarea {
+            width: 95%;
+            height: 120px;
+            resize: vertical;
+            background: #f9fafb;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s ease;
+        }
+        
+        button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        button:hover:not(:disabled) {
+            background: #1d4ed8;
+        }
+
+        .output {
+            margin-top: 20px;
+        }
+
+        .block {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f3f4f6;
+            border-radius: 12px;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .line {
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .line span {
+            word-break: break-all;
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .copy-btn {
+            background: #22c55e;
+            padding: 8px 14px;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+            position: relative;
+        }
+
+        .copy-btn:hover {
+            background: #16a34a;
+        }
+
+        .tooltip {
+            position: absolute;
+            top: -28px;
+            right: 0;
+            background: #111827;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .tooltip.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h2>Google Drive File & Folder Converter</h2>
+        <textarea id="driveLinks" placeholder="Paste one or more Google Drive links (each on a new line)"></textarea>
+        <br>
+        <button onclick="convertLinks()">Convert</button>
+        <div id="results" class="output"></div>
+    </div>
+    <script src="js/config.js"></script>
+
+    <script>
+        async function convertLinks() {
+            const driveLinksInput = document.getElementById("driveLinks").value.trim();
+            const resultsDiv = document.getElementById("results");
+            const convertBtn = document.querySelector("button");
+
+            const links = driveLinksInput.split("\n").map(l => l.trim()).filter(Boolean);
+            if (links.length === 0) {
+                resultsDiv.innerHTML = "";
+                return;
+            }
+
+            convertBtn.disabled = true;
+            convertBtn.textContent = "Converting...";
+            resultsDiv.innerHTML = "";
+
+            const promises = links.map(url => processUrl(url));
+            const results = await Promise.allSettled(promises);
+
+            convertBtn.disabled = false;
+            convertBtn.textContent = "Convert";
+
+            results.forEach(result => {
+                if (result.status === "fulfilled" && result.value) {
+                    // *** THIS IS THE CORRECTED PART ***
+                    // We loop through the array of elements returned by processUrl
+                    result.value.forEach(block => resultsDiv.appendChild(block));
+                } else if (result.status === "rejected") {
+                    resultsDiv.appendChild(createErrorBlock(result.reason));
+                }
+            });
+        }
+
+        async function processUrl(url) {
+            const idMatch = url.match(/(?:\/folders\/|\/file\/d\/)([-\w]{25,})/);
+            if (!idMatch) {
+                throw new Error(`Invalid Google Drive link format: ${url}`);
+            }
+            const id = idMatch[1];
+            const isFolder = url.includes("/folders/");
+
+            try {
+                // Point to our secure PHP proxy on the server
+                const proxyUrl = isFolder ?
+                    `./api_proxy.php?type=folder&id=${id}` :
+                    `./api_proxy.php?type=file&id=${id}`;
+
+                const response = await fetch(proxyUrl);
+                const data = await handleApiResponse(response, url);
+
+                if (isFolder) {
+                    if (!data.files || data.files.length === 0) {
+                        return [createErrorBlock(`Folder is empty or inaccessible: ${url}`)];
+                    }
+                    let folderBlocks = [];
+                    let folderHeader = document.createElement("div");
+                    folderHeader.className = "block";
+                    folderHeader.innerHTML = `<b>Folder:</b> contains ${data.files.length} files`;
+                    folderBlocks.push(folderHeader);
+
+                    data.files.forEach(file => {
+                        if (file.mimeType !== 'application/vnd.google-apps.folder') {
+                            folderBlocks.push(generateFileBlock(file.name, file.id));
+                        }
+                    });
+                    return folderBlocks; // Returns an array of elements
+                } else { // It's a file
+                    return [generateFileBlock(data.name || `File ${id}`, id)]; // Returns an array with one element
+                }
+            } catch (e) {
+                throw e;
+            }
+        }
+
+        async function handleApiResponse(response, url) {
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`Error for ${url}: ${errorData.error || 'Request failed'}`);
+            }
+            return response.json();
+        }
+
+        function generateFileBlock(name, id) {
+            let block = document.createElement("div");
+            block.className = "block";
+            const cleanName = name.replace(/\.[^/.]+$/, "");
+            const previewUrl = `https://drive.google.com/file/d/${id}/preview`;
+            const downloadUrl = `https://drive.google.com/uc?export=download&id=${id}`;
+
+            block.appendChild(createLine(cleanName, "Copy Name"));
+            block.appendChild(createLine(previewUrl, "Copy Preview"));
+            block.appendChild(createLine(downloadUrl, "Copy Download"));
+
+            return block;
+        }
+
+        function createErrorBlock(message) {
+            const block = document.createElement('div');
+            block.className = 'block';
+            block.style.backgroundColor = '#fee2e2';
+            block.style.color = '#991b1b';
+            block.style.border = '1px solid #fecaca';
+            block.textContent = message;
+            return block;
+        }
+
+        function createLine(value, label) {
+            let line = document.createElement("div");
+            line.className = "line";
+
+            let span = document.createElement("span");
+            span.textContent = value;
+            line.appendChild(span);
+
+            let btn = document.createElement("button");
+            btn.className = "copy-btn";
+            btn.textContent = label;
+
+            let tooltip = document.createElement("span");
+            tooltip.className = "tooltip";
+            tooltip.textContent = "Copied ✓";
+            btn.appendChild(tooltip);
+
+            btn.addEventListener("click", () => {
+                copyTextToClipboard(value, btn);
+            });
+
+            line.appendChild(btn);
+            return line;
+        }
+
+        function copyTextToClipboard(text, btn) {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showTooltip(btn);
+                }).catch(err => {
+                    fallbackCopyText(text, btn);
+                });
+            } else {
+                fallbackCopyText(text, btn);
+            }
+        }
+
+        function fallbackCopyText(text, btn) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.opacity = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                document.execCommand("copy");
+                showTooltip(btn);
+            } catch (err) {
+                console.error("Fallback copy failed", err);
+            }
+
+            document.body.removeChild(textArea);
+        }
+
+        function showTooltip(btn) {
+            let tooltip = btn.querySelector(".tooltip");
+            tooltip.classList.add("show");
+            setTimeout(() => tooltip.classList.remove("show"), 1500);
+        }
+    </script>
+</body>
+
+</html>

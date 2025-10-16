@@ -1,0 +1,441 @@
+// ===== START OF FINAL global.js FILE =====
+
+// =============================================================
+// ===== SECTION 1: GLOBALLY DEFINED FUNCTIONS (Available everywhere)
+// =============================================================
+
+// --- FIREBASE PUSH NOTIFICATIONS (NEW SERVER-SESSION VERSION) ---
+
+/**
+ * This function is called directly by the Android Wrapper App.
+ * Its only job is to receive the token and pass it to the server.
+ * @param {string} token The FCM token from the Android app.
+ */
+function receiveTokenFromAndroid(token) {
+  console.log("SUCCESS: Received FCM token from Android wrapper ->", token);
+
+  // No need to check for a username here. The server session is the source of truth.
+  // We just check if the token is valid before sending.
+  if (token) {
+    sendTokenToServer(token);
+  } else {
+    console.error("The received token was empty. Token not sent.");
+  }
+}
+
+/**
+ * This function sends ONLY the FCM token to the server.
+ * The server-side script will use the active PHP session to identify the user.
+ * @param {string} token The FCM token to be saved.
+ */
+function sendTokenToServer(token) {
+  console.log("Sending token to the server for the current logged-in user.");
+  const endpointUrl = 'api/save-fcm-token.php'; // The URL of our new PHP script
+
+  fetch(endpointUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    },
+    // We no longer need to send userName or userYear. The server knows who is logged in.
+    body: JSON.stringify({ fcm_token: token }),
+  })
+    .then(response => {
+      if (!response.ok) {
+        // If the server returns an error (e.g., 401 Unauthorized), we'll know.
+        console.error(`Server responded with status: ${response.status}`);
+        return response.json(); // Attempt to read error message from server
+      }
+      return response.json();
+    })
+    .then(data => {
+      if (data.success) {
+        console.log('SUCCESS: Token was successfully sent to the server.', data);
+      } else {
+        console.error('SERVER ERROR: Failed to save token.', data.message);
+      }
+    })
+    .catch(error => {
+      console.error('NETWORK ERROR: There was a problem sending the token to the server:', error);
+    });
+}
+
+/**
+ * This function initiates the token request from the Android app.
+ * It's called after the user's session has been successfully loaded.
+ */
+function requestFCMTokenFromAndroidApp() {
+  if (window.Android && typeof window.Android.getFCMToken === 'function') {
+    console.log("Requesting FCM token from Android Wrapper...");
+    window.Android.getFCMToken();
+  } else {
+    // This is normal in a web browser, not an error.
+    console.log("Not running inside the Android wrapper. Skipping FCM token request.");
+  }
+}
+
+/**
+ * DEPRECATED: This function is no longer needed. The server determines the user.
+ * It's kept here (but empty) to prevent errors if any very old code might still call it.
+ */
+function getLoggedInUserId() {
+  console.warn("getLoggedInUserId() is deprecated and should no longer be used.");
+  return null;
+}
+
+// --- UTILITY: DETECT WRAPPER APP ---
+(function () {
+  var ua = navigator.userAgent || "";
+  if (ua.includes("wv") || ua.includes("WrapperApp") || ua.includes("saadatnotebook")) {
+    document.documentElement.classList.add("wrapper-app");
+  }
+})();
+
+
+// --- SIDEMENU FUNCTIONS ---
+function openMenu() {
+  const sideMenu = document.getElementById('side-menu');
+  const menuBackdrop = document.querySelector('.menu-backdrop');
+  if (sideMenu) sideMenu.classList.add('is-open');
+  if (menuBackdrop) menuBackdrop.classList.add('is-active');
+  document.body.style.overflow = 'hidden';
+  if (window.Android && typeof window.Android.setPullToRefreshEnabled === 'function') {
+    window.Android.setPullToRefreshEnabled(false);
+  }
+}
+function closeMenu() {
+  const sideMenu = document.getElementById('side-menu');
+  const menuBackdrop = document.querySelector('.menu-backdrop');
+  if (sideMenu) sideMenu.classList.remove('is-open');
+  if (menuBackdrop) menuBackdrop.classList.remove('is-active');
+  document.body.style.overflow = '';
+  if (window.Android && typeof window.Android.setPullToRefreshEnabled === 'function') {
+    window.Android.setPullToRefreshEnabled(true);
+  }
+}
+
+// --- CONFIRMATION MODAL FUNCTIONS ---
+function closeConfirmModal() {
+  if (confirmModal) confirmModal.classList.remove('is-visible');
+}
+// This function is triggered by the confirmation modal.
+function performClearData() {
+    window.location.href = 'logout.php'; 
+}
+
+// --- PERSONALIZATION FUNCTIONS ---
+async function populateMenuHeader() {
+  const menuUserName = document.getElementById('menu-user-name');
+  const menuUserYear = document.getElementById('menu-user-year');
+  const menuUserPic = document.getElementById('menu-user-pic');
+  const customPic = localStorage.getItem('saadatNotesCustomUserPic');
+
+  try {
+    const response = await fetch('api/get-user-data.php');
+    const data = await response.json();
+    if (data.isLoggedIn) {
+      if (menuUserName) menuUserName.textContent = data.name;
+      if (menuUserYear) menuUserYear.textContent = data.year;
+      if (menuUserPic) {
+        menuUserPic.src = customPic ? customPic : 'images/avatar.jpg';
+      }
+
+      // **FIX**: Call personalizeMenuLinks from here with the correct year
+      personalizeMenuLinks(data.year);
+
+      // Also trigger FCM token request here, which is cleaner
+      requestFCMTokenFromAndroidApp();
+    } else {
+      // **IMPROVEMENT**: Handle case where user is not logged in
+      personalizeMenuLinks(null);
+    }
+  } catch (error) {
+    console.error("Could not fetch user data for menu.", error);
+    // **IMPROVEMENT**: Handle error case
+    personalizeMenuLinks(null);
+  }
+}
+
+function personalizeMenuLinks(userYearString) {
+  // We now point the home link to index.php, which will handle the redirect.
+  const homeLinks = document.querySelectorAll('.nav-home-link');
+  homeLinks.forEach(link => { link.href = 'index.php'; });
+
+  // Determine the year parameter based on the fetched user data
+  let yearParam = '1'; // Default to 1
+  if (userYearString && userYearString.includes('2nd Year')) {
+    yearParam = '2';
+  }
+
+  const dynamicLinks = document.querySelectorAll('.menu-links a, .button-grid a, a.see-all');
+  dynamicLinks.forEach(link => {
+    const originalHref = link.getAttribute('href');
+    if (originalHref && originalHref.endsWith('.php') && !originalHref.includes('admin') && !link.classList.contains('nav-home-link')) {
+      try {
+        const url = new URL(link.href, window.location.origin);
+        url.searchParams.set('year', yearParam);
+        link.href = url.pathname + url.search;
+      } catch (e) {
+        if (!originalHref.includes('?')) {
+          link.href = `${originalHref}?year=${yearParam}`;
+        }
+      }
+    }
+  });
+}
+
+// --- NATIVE DOWNLOAD HANDLER ---
+function setupDownloadListeners(container) {
+  function generateFilename(title) { const safeTitle = title.replace(/[^a-z0-9_.-]/gi, '_').replace(/__+/g, '_').substring(0, 100); return safeTitle + ".pdf"; }
+  container.querySelectorAll('.download-btn, .card-actions .btn-download').forEach(button => {
+    if (button.dataset.downloadListenerAttached) return;
+    button.addEventListener('click', function (event) {
+      if (window.Android && typeof window.Android.downloadFile === 'function') {
+        event.preventDefault();
+        const downloadUrl = this.href;
+        const parentItem = this.closest('.upload-item, .content-card');
+        const titleElement = parentItem ? (parentItem.querySelector('h4 a') || parentItem.querySelector('h4')) : null;
+        const title = titleElement ? titleElement.textContent.trim() : 'Download';
+        const fileName = generateFilename(title);
+        console.log(`Calling Android.downloadFile with: URL=${downloadUrl}, Title=${title}, FileName=${fileName}`);
+        window.Android.downloadFile(downloadUrl, title, fileName);
+      }
+    });
+    button.dataset.downloadListenerAttached = 'true';
+  });
+}
+
+
+// --- PREVIEW MODAL HANDLER (Exposed to window for dynamic use) ---
+function setupPreviewLinks(container) {
+  const previewLinks = container.querySelectorAll('.preview-link');
+  previewLinks.forEach(link => {
+    if (link.dataset.listenerAttached) return;
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const previewUrl = link.dataset.previewUrl;
+      let title = link.dataset.title || link.textContent.trim();
+      let downloadUrl = link.dataset.downloadUrl;
+      if (!downloadUrl) {
+        const parentItem = link.closest('.upload-item, .content-card');
+        const downloadLink = parentItem ? parentItem.querySelector('.download-btn, .card-actions .btn-download') : null;
+        downloadUrl = downloadLink ? downloadLink.href : '#';
+      }
+
+      const previewModal = document.getElementById('preview-modal');
+      if (previewModal && typeof previewModal.openModal === 'function') {
+        previewModal.openModal(previewUrl, title, downloadUrl);
+      }
+    });
+    link.dataset.listenerAttached = 'true';
+  });
+}
+window.setupPreviewLinks = setupPreviewLinks;
+// =========================================================================
+// ===== SECTION 2: DOMCONTENTLOADED (Code that runs after page is ready)
+// =========================================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // --- STEP 1: Injection of Menu, Confirmation Modal, and NEW Contact Modal HTML ---
+    if (!document.getElementById('side-menu')) {
+        
+        // Updated menuHTML with a single "Contact Us" button
+        const menuHTML = `<div class="menu-backdrop"></div><nav class="side-menu" id="side-menu"><div class="menu-header"><div class="menu-user-profile"><img src="images/avatar.jpg" alt="User Avatar" id="menu-user-pic"><div class="menu-user-details"><span id="menu-user-name">Guest</span><span id="menu-user-year">Not Logged In</span></div></div><button class="menu-close-btn" aria-label="Close Menu">&times;</button></div><ul class="menu-links"><li><a href="lectures.php"><i class="fas fa-chalkboard-teacher"></i> Class Lectures</a></li><li><a href="notes.php"><i class="fas fa-pencil-alt"></i> Hand Notes</a></li><li><a href="question.php"><i class="fas fa-question-circle"></i> NU Questions</a></li><li><a href="routines.php"><i class="fas fa-calendar-alt"></i> Routines & Schedules</a></li><li><a href="question-of-the-day.php"><i class="fas fa-brain"></i> Daily Quiz</a></li><li><a href="announcements.php"><i class="fas fa-bell"></i> Announcements</a></li><li><a href="suggestions.php"><i class="fas fa-lightbulb"></i> Suggestions</a></li><li><a href="books.php"><i class="fas fa-book"></i> Explore Reads</a></li><li><a href="graphing-calculator.html"><i class="fas fa-chart-line"></i> Graphing Calculator</a></li><li><a href="cgpa-calculator.html"><i class="fas fa-calculator"></i> CGPA Calculator</a></li><li><a href="department.php"><i class="fas fa-university"></i> Our Campus</a></li></ul><ul class="menu-actions"><li><a href="https://www.saadatcollege.gov.bd/noticeboardview" target="_blank"><i class="fas fa-bullhorn"></i> College Notices</a></li><li><button id="contact-trigger-btn"><i class="fas fa-paper-plane"></i> Contact Us</button></li><li><a href="logout.php" id="logout-btn-trigger"><i class="fas fa-sign-out-alt"></i> Log Out</a></li></ul></nav>`;
+
+        // Unchanged Confirmation Modal
+        const confirmModalHTML = `<div class="confirm-modal-backdrop" id="confirm-modal"><div class="confirm-modal-content"><i class="fas fa-exclamation-triangle"></i><h3>Are you sure?</h3><p>This will log you out and clear device-specific data. This action cannot be undone.</p><div class="confirm-modal-actions"><button id="confirm-cancel-btn" class="modal-btn modal-btn-secondary">Cancel</button><button id="confirm-yes-btn" class="modal-btn modal-btn-danger">Yes, Log Out</button></div></div></div>`;
+       
+
+        // NEW Contact Options Modal
+        const contactModalHTML = `<div class="confirm-modal-backdrop" id="contact-options-modal"> <div class="confirm-modal-content"> <i class="fas fa-question-circle"></i> <h3>How can we help?</h3> <p>For app/website issues or feedback, you can reach out via X (Twitter) or send us a message directly.</p> <div class="confirm-modal-actions" style="flex-direction: column; gap: 0.75rem;"> <!-- IMPORTANT: CHANGE THE URL HERE --> <a href="https://x.com/me_sleepyhead" id="contact-twitter-link" class="modal-btn modal-btn-secondary" style="background-color: #1DA1F2; color: white;"> <i class="fab fa-twitter" style="margin-right: 8px;"></i> Contact on X (Twitter) </a> <a href="contact.php" class="modal-btn modal-btn-primary"> <i class="fas fa-envelope" style="margin-right: 8px;"></i> Send a Message </a> <button id="contact-modal-cancel-btn" class="modal-btn modal-btn-secondary" style="margin-top: 10px;">Cancel</button> </div> </div> </div>`;
+
+        document.body.insertAdjacentHTML('beforeend', menuHTML);
+        document.body.insertAdjacentHTML('beforeend', confirmModalHTML);
+        document.body.insertAdjacentHTML('beforeend', contactModalHTML);
+    }
+
+  // --- SETUP FOR CORE UI ELEMENTS ---
+  const mainContent = document.querySelector('.page-wrapper'); const searchView = document.getElementById('search-view'); const searchTrigger = document.querySelector('.search-icon-trigger'); const searchBackBtn = document.getElementById('search-back-btn'); const searchInput = document.getElementById('search-view-input'); if (searchTrigger) { searchTrigger.addEventListener('click', () => { if (mainContent) mainContent.classList.add('is-inactive'); searchView.classList.add('active'); searchInput.focus(); }); } if (searchBackBtn) { searchBackBtn.addEventListener('click', () => { if (mainContent) mainContent.classList.remove('is-inactive'); searchView.classList.remove('active'); }); }
+  const menuIcon = document.querySelector('.menu-icon'); const menuCloseBtn = document.querySelector('.menu-close-btn'); const menuBackdrop = document.querySelector('.menu-backdrop');
+  if (menuIcon) menuIcon.addEventListener('click', openMenu);
+  if (menuCloseBtn) menuCloseBtn.addEventListener('click', closeMenu);
+  if (menuBackdrop) menuBackdrop.addEventListener('click', closeMenu);
+  
+  const previewModal = document.getElementById('preview-modal');
+  if (previewModal) {
+    const previewBackBtn = document.getElementById('preview-back-btn');
+    const previewTitle = document.getElementById('preview-title');
+    const previewDownloadBtn = document.getElementById('preview-download-btn');
+    const iframe = previewModal.querySelector('iframe');
+    const closeModal = () => { if (previewModal) previewModal.classList.remove('active'); if (iframe) iframe.setAttribute('src', 'about:blank'); document.body.style.overflow = ''; if (window.Android && typeof window.Android.setPullToRefreshEnabled === 'function') { window.Android.setPullToRefreshEnabled(true); } };
+    if (previewBackBtn) previewBackBtn.addEventListener('click', closeModal);
+    previewModal.addEventListener('click', (e) => { if (e.target === previewModal) closeModal(); });
+    const openModalWithUrl = (previewUrl, title, downloadUrl) => {
+      if (previewUrl && previewUrl !== '#') {
+        let finalPreviewUrl = previewUrl; if (finalPreviewUrl.toLowerCase().endsWith('.pdf')) { finalPreviewUrl += '#toolbar=0'; }
+        if (iframe) iframe.setAttribute('src', finalPreviewUrl);
+        if (previewTitle) previewTitle.textContent = title;
+        if (previewDownloadBtn) previewDownloadBtn.setAttribute('href', downloadUrl);
+        if (previewModal) previewModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        if (window.Android && typeof window.Android.setPullToRefreshEnabled === 'function') { window.Android.setPullToRefreshEnabled(false); }
+      } else { alert('Preview link is not available for this item.'); }
+    };
+    previewModal.openModal = openModalWithUrl;
+  }
+
+  // ===== START: NEW AND CORRECTED LOGOUT MODAL CODE =====
+  const confirmModal = document.getElementById('confirm-modal');
+  const logoutBtnTrigger = document.getElementById('logout-btn-trigger');
+  const confirmYesBtn = document.getElementById('confirm-yes-btn');
+  const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
+
+  if (logoutBtnTrigger && confirmModal) {
+      logoutBtnTrigger.addEventListener('click', (event) => {
+          event.preventDefault(); // This is crucial to stop the link from navigating
+          confirmModal.classList.add('is-visible');
+      });
+  }
+  if (confirmYesBtn) {
+      confirmYesBtn.addEventListener('click', () => {
+          performClearData(); // This function already redirects to logout.php
+      });
+  }
+  if (confirmCancelBtn && confirmModal) {
+      confirmCancelBtn.addEventListener('click', () => {
+          confirmModal.classList.remove('is-visible');
+      });
+  }
+  if (confirmModal) {
+      confirmModal.addEventListener('click', (e) => {
+          if (e.target === confirmModal) {
+              confirmModal.classList.remove('is-visible');
+          }
+      });
+  }
+  // ===== END: NEW AND CORRECTED LOGOUT MODAL CODE =====
+
+
+  // --- SETUP LISTENERS FOR INITIAL PAGE CONTENT ---
+  setupDownloadListeners(document.body);
+  setupPreviewLinks(document.body);
+
+  // --- REPLACE WITH THIS NEW SEARCH LOGIC ---
+  const searchResultsContainer = document.querySelector('.search-view-body');
+  let searchTimeout;
+  if (searchInput && searchResultsContainer) {
+    searchInput.addEventListener('input', () => {
+      clearTimeout(searchTimeout);
+      const query = searchInput.value.trim();
+      if (query === '') {
+        searchResultsContainer.innerHTML = `<div class="search-placeholder"><p>Start typing to search...</p></div>`;
+        return;
+      }
+      let academicYear = 1; 
+      if (window.NotebookSession && window.NotebookSession.userData) {
+        academicYear = window.NotebookSession.userData.year.includes('2') ? 2 : 1;
+      }
+      searchTimeout = setTimeout(() => {
+        searchResultsContainer.innerHTML = `<div class="search-placeholder"><p>Searching...</p></div>`;
+        fetch(`${window.API_BASE_URL}/search.php?q=${encodeURIComponent(query)}&year=${academicYear}`)
+          .then(response => { if (!response.ok) throw new Error('Network error'); return response.json(); })
+          .then(data => {
+            let html = '';
+            if (data && data.length > 0) {
+              html += '<div class="upload-list">';
+              data.forEach(item => {
+                const videosJson = item.videos_json ? `'${item.videos_json}'` : '[]';
+                html += `
+                                <div class="upload-item" 
+                                     data-id="${item.id}" 
+                                     data-title="${item.title}" 
+                                     data-preview-link="${item.preview_link}" 
+                                     data-file-link="${item.file_link}" 
+                                     data-description="${item.description || ''}" 
+                                     data-videos-json=${videosJson}>
+                                    <div class="upload-icon"><i class="fas fa-file-alt"></i></div>
+                                    <div class="upload-details">
+                                        <h4><a href="#" class="preview-link" data-preview-url="${item.preview_link}" data-download-url="${item.file_link}" data-title="${item.title}">${item.title}</a></h4>
+                                        <p class="upload-category">Category: ${item.category}</p>
+                                    </div>
+                                    <button class="bookmark-btn" aria-label="Bookmark" data-item-id="${item.id}"><i class="far fa-bookmark"></i></button>
+                                    <a href="${item.file_link}" class="download-btn" download><i class="fas fa-download"></i></a>
+                                </div>`;
+              });
+              html += '</div>';
+            } else {
+              html = `<div class="search-placeholder"><p>No results found for "${query}"</p></div>`;
+            }
+            searchResultsContainer.innerHTML = html;
+            window.setupPreviewLinks(searchResultsContainer);
+            setupDownloadListeners(searchResultsContainer);
+            if (window.updateAllBookmarkButtons) {
+              updateAllBookmarkButtons();
+            }
+          })
+          .catch(error => {
+            console.error('Search error:', error);
+            searchResultsContainer.innerHTML = `<div class="search-placeholder"><p>Sorry, a server error occurred.</p></div>`;
+          });
+      }, 300);
+    });
+  }
+
+  // --- ANNOUNCEMENT POP-UP LOGIC ---
+  const announcementModal = document.getElementById('announcement-detail-modal');
+  if (announcementModal) {
+    const summaryCards = document.querySelectorAll('.announcement-summary-card');
+    const modalImageContainer = document.getElementById('modal-announcement-image-container');
+    const modalImage = document.getElementById('modal-announcement-image');
+    const modalTitle = document.getElementById('modal-announcement-title');
+    const modalDescription = document.getElementById('modal-announcement-description');
+    const closeModalBtn = document.getElementById('announcement-modal-close-btn');
+    const openAnnouncementModal = (card) => { const title = card.dataset.fullTitle; const description = card.dataset.fullDescription; const imageUrl = card.dataset.fullImage; modalTitle.textContent = title; modalDescription.innerHTML = description.replace(/\n/g, '<br>'); if (imageUrl) { modalImage.src = imageUrl; modalImageContainer.style.display = 'block'; } else { modalImageContainer.style.display = 'none'; } announcementModal.classList.add('is-visible'); };
+    const closeAnnouncementModal = () => { announcementModal.classList.remove('is-visible'); };
+    summaryCards.forEach(card => { card.addEventListener('click', () => openAnnouncementModal(card)); });
+    if (closeModalBtn) closeModalBtn.addEventListener('click', closeAnnouncementModal);
+    announcementModal.addEventListener('click', (e) => { if (e.target === announcementModal) { closeAnnouncementModal(); } });
+  }
+    
+    
+    // --- NEW: Add event listeners for the contact modal ---
+    const contactTriggerBtn = document.getElementById('contact-trigger-btn');
+    const contactModal = document.getElementById('contact-options-modal');
+    const contactCancelBtn = document.getElementById('contact-modal-cancel-btn');
+    const contactTwitterLink = document.getElementById('contact-twitter-link'); // <-- Add this
+
+    if (contactTriggerBtn && contactModal && contactCancelBtn) {
+        contactTriggerBtn.addEventListener('click', () => {
+            closeMenu();
+            setTimeout(() => { contactModal.classList.add('is-visible'); }, 150);
+        });
+        contactCancelBtn.addEventListener('click', () => {
+            contactModal.classList.remove('is-visible');
+        });
+        contactModal.addEventListener('click', (e) => {
+            if (e.target === contactModal) { contactModal.classList.remove('is-visible'); }
+        });
+        // --- THIS IS THE NEW LISTENER TO ADD ---
+        if (contactTwitterLink) {
+            contactTwitterLink.addEventListener('click', (event) => {
+                event.preventDefault(); // Stop the default link behavior
+                const url = contactTwitterLink.href;
+                
+                // Check if the Android interface function exists
+                if (window.Android && typeof window.Android.openExternalLink === 'function') {
+                    console.log("Calling Android.openExternalLink with URL:", url);
+                    window.Android.openExternalLink(url);
+                } else {
+                    // Fallback for regular web browsers
+                    console.log("Not in wrapper, opening link in new tab:", url);
+                    window.open(url, '_blank', 'noopener,noreferrer');
+                }
+            });
+        }
+    }
+  // --- PAGE INITIALIZATION FUNCTION CALLS ---
+  populateMenuHeader();
+  updateActiveBottomNav();
+});

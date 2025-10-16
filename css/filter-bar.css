@@ -1,0 +1,74 @@
+/* css/filter-bar.css (v3 - Compact Grid Layout) */
+
+.subject-filter-container {
+    margin-bottom: 2rem;
+}
+
+.subject-filter-label {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+/* THIS IS THE KEY CHANGE - SWITCHING TO CSS GRID */
+.filter-buttons-grid {
+    display: grid;
+    /* 
+     * This creates responsive columns.
+     * auto-fit: Create as many columns as can fit.
+     * minmax: Each column should be at least 120px wide, but can grow to fill space.
+     * This will naturally create 2 or 3 columns on most phones.
+    */
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.75rem;
+}
+
+.filter-btn {
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border-color);
+    background-color: var(--card-background);
+    color: var(--text-secondary);
+    border-radius: 50px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    
+    /* Ensure text is centered and doesn't overflow messily */
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.filter-btn:hover {
+    transform: translateY(-2px);
+}
+
+/* Active button styling remains the same */
+.filter-btn.active {
+    background-color: var(--primary-color);
+    color: #fff;
+    border-color: var(--primary-color);
+}
+
+html.dark-mode .filter-btn.active {
+    color: #0a0a0a;
+}
+
+/* Subject section styles remain the same */
+.subject-section {
+    display: block;
+    transition: opacity 0.3s, max-height 0.3s;
+    max-height: 5000px;
+    opacity: 1;
+    overflow: hidden;
+}
+
+.subject-section.hidden {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+}
