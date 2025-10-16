@@ -1,13 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Loading Saadat Notebook...</title>
-    <meta http-equiv="refresh" content="0; url=index.php">
-    <script type="text/javascript">
-        window.location.href = "index.php"
+    <style>
+        body { background-color: #ffffff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .loader { border: 8px solid #f3f3f3; border-top: 8px solid #0a0a0a; border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        html.dark-mode body { background-color: #121212; }
+        html.dark-mode .loader { border: 8px solid #373737; border-top: 8px solid #ffffff; }
+    </style>
+    <script>
+        // --- 1. Instantly apply dark mode to prevent white flash ---
+        (function() {
+            try {
+                const theme = localStorage.getItem('saadatNotesTheme');
+                const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (theme === 'dark' || (!theme && systemPrefersDark)) {
+                    document.documentElement.classList.add('dark-mode');
+                }
+            } catch (e) {}
+        })();
     </script>
 </head>
 <body>
-    <p>If you are not redirected automatically, follow this <a href="index.php">link</a>.</p>
+    <div class="loader"></div>
+    <script src="js/config.js"></script> <!-- We need the API_BASE_URL -->
+    <script>
+        // --- 2. Check login status and redirect ---
+        async function checkLoginAndRedirect() {
+            // Include the credentials to send cookies to the backend
+            const options = { credentials: 'include' };
+            
+            try {
+                const response = await fetch(`${window.API_BASE_URL}/api/get-user-session.php`, options);
+                
+                if (!response.ok) {
+                    // If the API call fails, we can't know the status, so default to login page
+                    console.error("API Error:", response.status);
+                    window.location.replace("login.php");
+                    return;
+                }
+                
+                const data = await response.json();
+                
+                if (data.isLoggedIn) {
+                    // The server confirmed the user is logged in.
+                    const homepage = data.userData.year.includes('2') ? 'hons-2nd-year.php' : 'hons-1st-year.php';
+                    window.location.replace(homepage);
+                } else {
+                    // The server confirmed the user is NOT logged in.
+                    window.location.replace("login.php");
+                }
+            } catch (error) {
+                // If there's a network error and we can't reach the server, go to the login page.
+                console.error("Network Error on initial check:", error);
+                window.location.replace("login.php");
+            }
+        }
+        checkLoginAndRedirect();
+    </script>
 </body>
 </html>
